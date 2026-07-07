@@ -33,27 +33,29 @@ function Login() {
     };
 
     const verifyOtpHandler = async () => {
-
         try {
-
             const response = await verifyOtp({
-
                 mobileNumber,
-                otp
-
+                otp,
             });
 
-            alert(response.data);
+            const data = response.data;
 
-            // Temporary redirect
-            navigate("/");
+            alert(data.message);
 
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("role", data.role);
+
+            if (data.role === "WORKER") {
+                navigate("/worker/dashboard");
+            } else if (data.role === "CONTRACTOR") {
+                navigate("/contractor/dashboard");
+            } else if (data.role === "ADMIN") {
+                navigate("/admin/dashboard");
+            }
         } catch (error) {
-
             alert(error.response?.data || "Invalid OTP");
-
         }
-
     };
 
     return (

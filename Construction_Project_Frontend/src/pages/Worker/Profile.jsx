@@ -7,33 +7,39 @@ import {
 
 function Profile() {
 
-  // Temporary worker id
-  const workerId = 1;
+  // Dynamically load user ID from storage
+  const workerId = localStorage.getItem("userId");
 
   const [worker, setWorker] = useState({
     workerName: "",
-    age: "",
-    gender: "",
+    age: 18,
+    gender: "Male",
     address: "",
     village: "",
     district: "",
-    skill: "",
-    experienceYears: "",
+    skill: "Mason",
+    experienceYears: 0,
     currentLocation: "",
   });
 
   useEffect(() => {
-    loadProfile();
-  }, []);
-
-  const loadProfile = async () => {
-    try {
-      const response = await getWorkerProfile(workerId);
-      setWorker(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    // Fetch existing profile data
+    const fetchProfile = async () => {
+      try {
+        const response = await getWorkerProfile(workerId);
+        // Only override if the backend actually returned valid data for that field
+        setWorker(prev => ({
+            ...prev,
+            ...response.data,
+            age: response.data.age || 18,
+            experienceYears: response.data.experienceYears || 0
+        }));
+      } catch (error) {
+        console.error("Failed to fetch profile", error);
+      }
+    };
+    fetchProfile();
+  }, [workerId]);
 
   const handleChange = (e) => {
     setWorker({
@@ -45,11 +51,26 @@ function Profile() {
   const saveProfile = async (e) => {
     e.preventDefault();
 
+    const payload = {
+      ...worker,
+      age: parseInt(worker.age) || 18,
+      experienceYears: parseInt(worker.experienceYears) || 0,
+    };
+
+    console.log("Sending Data:", payload);
+
     try {
-      await updateWorkerProfile(workerId, worker);
+      const response = await updateWorkerProfile(workerId, payload);
+      console.log(response.data);
       alert("Profile Updated Successfully");
     } catch (error) {
-      alert("Update Failed");
+      console.log(error.response);
+      console.log(error.response?.data);
+      if (error.response?.data?.errors) {
+        alert("Validation Error: " + JSON.stringify(error.response.data.errors));
+      } else {
+        alert("Update Failed: " + JSON.stringify(error.response?.data || error.message));
+      }
     }
   };
 
