@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,6 +52,7 @@ public class Job {
     private LocalDateTime postedDate;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<JobApplication> applications;
 
     @PrePersist

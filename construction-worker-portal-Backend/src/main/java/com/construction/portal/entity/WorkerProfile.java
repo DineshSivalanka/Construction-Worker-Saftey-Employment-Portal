@@ -1,9 +1,12 @@
 package com.construction.portal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "worker_profile")
@@ -44,5 +47,6 @@ public class WorkerProfile {
     private String currentLocation;
 
     @OneToMany(mappedBy = "worker", cascade = CascadeType.ALL)
-    private java.util.List<JobApplication> applications;
+    @JsonIgnore
+    private List<JobApplication> applications;
 }

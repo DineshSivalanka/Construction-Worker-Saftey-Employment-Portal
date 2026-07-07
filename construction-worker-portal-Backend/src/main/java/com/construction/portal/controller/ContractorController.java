@@ -2,6 +2,7 @@ package com.construction.portal.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import com.construction.portal.dto.ContractorDTO;
@@ -67,7 +68,7 @@ public class ContractorController {
     @PutMapping("/applications/{applicationId}")
     public String updateApplicationStatus(
             @PathVariable Integer applicationId,
-            @RequestParam String status) {
+            @Valid @RequestParam String status) {
 
         return contractorService.updateApplicationStatus(applicationId, status);
     }

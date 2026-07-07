@@ -2,6 +2,7 @@ package com.construction.portal.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import com.construction.portal.dto.WorkerDTO;
@@ -28,7 +29,7 @@ public class WorkerController {
     @PutMapping("/{workerId}")
     public WorkerDTO updateProfile(
             @PathVariable Integer workerId,
-            @RequestBody WorkerDTO dto) {
+            @Valid @RequestBody WorkerDTO dto) {
 
         return workerService.updateWorkerProfile(workerId, dto);
     }
