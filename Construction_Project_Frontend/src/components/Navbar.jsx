@@ -1,126 +1,167 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import { FaHardHat, FaBars, FaTimes, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 
 function Navbar() {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-  return (
-    <nav
-      className="navbar navbar-expand-lg shadow"
-      style={{
-        background: "linear-gradient(90deg, #ff6f00, #ff9800)",
-        minHeight: "85px",
-      }}
+  const NavLink = ({ to, children }) => (
+    <Link 
+      to={to} 
+      style={{ textDecoration: 'none' }}
+      className="flex items-center justify-center px-3 py-1.5 text-sm text-white font-medium bg-white/5 hover:bg-[#D8125B] rounded-md transition-all duration-300 border border-transparent hover:border-[#D8125B] text-center no-underline whitespace-nowrap"
+      onClick={() => setIsOpen(false)}
     >
-      <div className="container">
+      {children}
+    </Link>
+  );
 
-        <Link
-          className="navbar-brand fw-bold text-white fs-3"
-          to="/"
-        >
-          🏗 Construction Portal
-        </Link>
+  return (
+    <nav className="sticky top-0 z-50 bg-[#2C2E39] shadow-md border-b border-black/20">
+      <div className="w-full px-4 sm:px-8 lg:px-12">
+        <div className="flex justify-between h-20 items-center">
+          
+          {/* Brand */}
+          <div className="flex-shrink-0 flex items-center">
+            <Link to="/" style={{ textDecoration: 'none' }} className="flex items-center gap-3 text-white text-2xl font-extrabold tracking-tight hover:opacity-90 transition-opacity no-underline">
+              <div className="text-[#D8125B] p-2">
+                <FaHardHat size={28} />
+              </div>
+              <span className="block font-bold">Construction Portal</span>
+            </Link>
+          </div>
 
-        <button
-          className="navbar-toggler bg-white"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbar"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+          {/* Mobile menu button */}
+          <div className="flex md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-white hover:text-orange-100 focus:outline-none p-2"
+            >
+              {isOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+            </button>
+          </div>
 
-        <div className="collapse navbar-collapse" id="navbar">
-          <ul className="navbar-nav ms-auto align-items-center">
-
+          {/* Desktop Menu */}
+          <div className="hidden md:flex md:items-center md:space-x-2 lg:space-x-4">
             {!userId ? (
               <>
-                <li className="nav-item mx-2">
-                  <Link className="nav-link text-white fw-semibold" to="/">
-                    Home
-                  </Link>
-                </li>
-                <li className="nav-item mx-2">
-                  <Link className="nav-link text-white fw-semibold" to="/login">
-                    Login
-                  </Link>
-                </li>
-                <li className="nav-item mx-2">
-                  <Link className="btn btn-light text-warning fw-bold px-4 rounded-pill" to="/register">
-                    Register
-                  </Link>
-                </li>
+                <NavLink to="/">Home</NavLink>
+                <NavLink to="/login">Login</NavLink>
+                <Link 
+                  style={{ textDecoration: 'none' }}
+                  className="ml-4 px-6 py-2.5 bg-[#D8125B] text-white font-bold rounded-lg shadow-sm hover:bg-[#D8125B]/80 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 no-underline"
+                >
+                  Register
+                </Link>
               </>
             ) : (
               <>
                 {role === "WORKER" && (
                   <>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/worker/dashboard">Dashboard</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/worker/profile">My Profile</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/worker/jobs">Find Jobs</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/worker/my-applications">My Applications</Link>
-                    </li>
+                    <NavLink to="/worker/dashboard">Dashboard</NavLink>
+                    <NavLink to="/worker/profile">My Profile</NavLink>
+                    <NavLink to="/worker/jobs">Find Jobs</NavLink>
+                    <NavLink to="/worker/my-applications">My Applications</NavLink>
                   </>
                 )}
                 {role === "CONTRACTOR" && (
                   <>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/contractor/dashboard">Dashboard</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/contractor/post-job">Post Job</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/contractor/my-jobs">My Jobs</Link>
-                    </li>
+                    <NavLink to="/contractor/dashboard">Dashboard</NavLink>
+                    <NavLink to="/contractor/post-job">Post Job</NavLink>
+                    <NavLink to="/contractor/my-jobs">My Jobs</NavLink>
                   </>
                 )}
                 {role === "ADMIN" && (
                   <>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/admin/dashboard">Dashboard</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/admin/workers">Workers</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/admin/contractors">Contractors</Link>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <Link className="nav-link text-white fw-semibold" to="/admin/jobs">Jobs</Link>
-                    </li>
+                    <NavLink to="/admin/dashboard">Dashboard</NavLink>
+                    <NavLink to="/admin/workers">Workers</NavLink>
+                    <NavLink to="/admin/contractors">Contractors</NavLink>
+                    <NavLink to="/admin/jobs">Jobs</NavLink>
                   </>
                 )}
 
-                <li className="nav-item mx-2">
+                <div className="flex items-center gap-4 ml-6 pl-6 border-l border-white/20">
+                  <div className="flex items-center text-white/90 gap-2">
+                    <FaUserCircle size={20} />
+                    <span className="text-sm font-medium tracking-wide">{role}</span>
+                  </div>
                   <button 
-                    className="btn btn-danger fw-bold px-4 rounded-pill shadow-sm"
                     onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500/90 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors shadow-sm"
                   >
-                    Logout
+                    <FaSignOutAlt />
+                    <span>Logout</span>
                   </button>
-                </li>
+                </div>
               </>
             )}
-
-          </ul>
+          </div>
         </div>
       </div>
+
+      {isOpen && (
+        <div className="md:hidden bg-[#2C2E39] shadow-inner pb-4 px-2 border-t border-black/20">
+          <div className="px-2 pt-2 pb-3 flex flex-col gap-3">
+            {!userId ? (
+              <>
+                <NavLink to="/">Home</NavLink>
+                <NavLink to="/login">Login</NavLink>
+                <Link 
+                  to="/register" 
+                  onClick={() => setIsOpen(false)}
+                  style={{ textDecoration: 'none' }}
+                  className="mt-4 text-center block px-4 py-3 bg-[#D8125B] text-white font-bold rounded-lg shadow-sm hover:bg-[#D8125B]/80 transition-colors no-underline"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <>
+                {role === "WORKER" && (
+                  <>
+                    <NavLink to="/worker/dashboard">Dashboard</NavLink>
+                    <NavLink to="/worker/profile">My Profile</NavLink>
+                    <NavLink to="/worker/jobs">Find Jobs</NavLink>
+                    <NavLink to="/worker/my-applications">My Applications</NavLink>
+                  </>
+                )}
+                {role === "CONTRACTOR" && (
+                  <>
+                    <NavLink to="/contractor/dashboard">Dashboard</NavLink>
+                    <NavLink to="/contractor/post-job">Post Job</NavLink>
+                    <NavLink to="/contractor/my-jobs">My Jobs</NavLink>
+                  </>
+                )}
+                {role === "ADMIN" && (
+                  <>
+                    <NavLink to="/admin/dashboard">Dashboard</NavLink>
+                    <NavLink to="/admin/workers">Workers</NavLink>
+                    <NavLink to="/admin/contractors">Contractors</NavLink>
+                    <NavLink to="/admin/jobs">Jobs</NavLink>
+                  </>
+                )}
+                <div className="pt-4 mt-2 border-t border-black/20">
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white font-bold rounded-lg"
+                  >
+                    <FaSignOutAlt />
+                    Logout
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
