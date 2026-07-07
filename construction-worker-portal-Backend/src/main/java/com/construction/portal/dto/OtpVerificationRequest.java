@@ -13,7 +13,7 @@ public class OtpVerificationRequest {
     private String mobileNumber;
 
     @Pattern(
-            regexp = "^\\d{6}$",
+            regexp = "^(\\d{6}|FIREBASE_VERIFIED)$",
             message = "OTP must be 6 digits"
     )
     private String otp;

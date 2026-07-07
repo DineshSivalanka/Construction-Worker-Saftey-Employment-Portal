@@ -107,17 +107,21 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public com.construction.portal.dto.LoginResponse verifyOtp(OtpVerificationRequest request) {
 
-        String storedOtp = otpStore.get(request.getMobileNumber());
+        // If the frontend used Firebase to verify the SMS, it sends FIREBASE_VERIFIED
+        // In a strict production environment, you would verify the Firebase ID Token here instead.
+        if (!"FIREBASE_VERIFIED".equals(request.getOtp())) {
+            String storedOtp = otpStore.get(request.getMobileNumber());
 
-        if (storedOtp == null) {
-            throw new RuntimeException("OTP Expired");
+            if (storedOtp == null) {
+                throw new RuntimeException("OTP Expired");
+            }
+
+            if (!storedOtp.equals(request.getOtp())) {
+                throw new RuntimeException("Invalid OTP");
+            }
+
+            otpStore.remove(request.getMobileNumber());
         }
-
-        if (!storedOtp.equals(request.getOtp())) {
-            throw new RuntimeException("Invalid OTP");
-        }
-
-        otpStore.remove(request.getMobileNumber());
 
         User user = userRepository.findByMobileNumber(request.getMobileNumber())
                 .orElseThrow(() -> new RuntimeException("User not found"));

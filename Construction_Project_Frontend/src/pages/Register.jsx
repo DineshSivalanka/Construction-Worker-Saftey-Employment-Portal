@@ -28,8 +28,9 @@ function Register() {
 
       navigate("/login");
     } catch (error) {
+      const data = error.response?.data;
       alert(
-        error.response?.data || "Registration Failed"
+        (typeof data === "object" ? JSON.stringify(data) : data) || "Registration Failed"
       );
     }
   };
@@ -92,6 +93,10 @@ function Register() {
 
                       <option value="CONTRACTOR">
                         Contractor
+                      </option>
+
+                      <option value="ADMIN">
+                        Admin
                       </option>
 
                     </select>
