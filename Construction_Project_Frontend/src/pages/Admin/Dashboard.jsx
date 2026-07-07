@@ -38,7 +38,7 @@ function AdminDashboard() {
       <Navbar />
 
       <div className="container mt-5">
-        <h2 className="text-primary fw-bold mb-4">👑 Admin Dashboard</h2>
+        <h2 className="text-[#D8125B] fw-bold mb-4">👑 Admin Dashboard</h2>
 
         <div className="row">
           <div className="col-md-4 mb-4">

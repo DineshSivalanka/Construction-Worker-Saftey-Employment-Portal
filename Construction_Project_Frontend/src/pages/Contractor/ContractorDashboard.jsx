@@ -4,14 +4,14 @@ import Navbar from '../../components/Navbar';
 
 function ContractorDashboard() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <main className="mx-auto max-w-7xl px-6 py-8">
         <h1 className="mb-8 text-3xl font-semibold text-slate-900">Contractor Dashboard</h1>
         <div className="grid gap-6 md:grid-cols-3">
           <Link to="/contractor/post-job" className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md transition">
             <p className="text-sm text-slate-600">Post a Job</p>
-            <p className="mt-2 text-2xl font-semibold text-blue-600">➕</p>
+            <p className="mt-2 text-2xl font-semibold text-[#D8125B]">➕</p>
           </Link>
           <Link to="/contractor/jobs" className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md transition">
             <p className="text-sm text-slate-600">My Jobs</p>

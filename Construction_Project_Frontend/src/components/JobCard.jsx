@@ -14,7 +14,7 @@ function JobCard({ job }) {
         <span className="rounded-full bg-slate-100 px-2 py-1">{job.workersNeeded} workers</span>
         <span className="rounded-full bg-slate-100 px-2 py-1">Exp: {job.experience}</span>
       </div>
-      <Link to={`/worker/jobs/${job.id}`} className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+      <Link to={`/worker/jobs/${job.id}`} className="inline-flex rounded-lg bg-[#D8125B] px-4 py-2 text-sm font-semibold text-white hover:bg-[#D8125B]">
         View Details
       </Link>
     </div>

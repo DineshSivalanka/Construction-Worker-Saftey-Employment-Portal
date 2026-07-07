@@ -36,7 +36,7 @@ function AdminWorkers() {
       <Navbar />
       <div className="container mt-5 mb-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="text-primary fw-bold">👷 Manage Workers</h2>
+          <h2 className="text-[#D8125B] fw-bold">👷 Manage Workers</h2>
           <Link to="/admin/dashboard" className="btn btn-secondary fw-bold">
             🔙 Back to Dashboard
           </Link>

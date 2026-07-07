@@ -39,7 +39,7 @@ function MyJobs() {
 
       <div className="container mt-5 mb-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="text-primary fw-bold">📋 My Posted Jobs</h2>
+          <h2 className="text-[#D8125B] fw-bold">📋 My Posted Jobs</h2>
           <Link to="/contractor/post-job" className="btn btn-warning fw-bold">
             ➕ Post New Job
           </Link>
@@ -54,7 +54,7 @@ function MyJobs() {
             {jobs.map((job) => (
               <div className="col-md-6 mb-4" key={job.jobId}>
                 <div className="card shadow-sm border-0 h-100 rounded-4">
-                  <div className="card-header bg-dark text-white rounded-top-4 py-3">
+                  <div className="card-header bg-dark text-gray-900 rounded-top-4 py-3">
                     <h5 className="mb-0">{job.jobTitle}</h5>
                   </div>
                   <div className="card-body">
@@ -64,10 +64,10 @@ function MyJobs() {
                     <p><strong>Status:</strong> {job.status}</p>
                     <hr />
                     <div className="d-flex justify-content-between mt-3">
-                      <Link to={`/contractor/edit-job/${job.jobId}`} className="btn btn-primary text-white">
+                      <Link to={`/contractor/edit-job/${job.jobId}`} className="btn btn-primary text-gray-900">
                         ✏️ Edit
                       </Link>
-                      <Link to={`/contractor/applicants/${job.jobId}`} className="btn btn-success text-white">
+                      <Link to={`/contractor/applicants/${job.jobId}`} className="btn btn-success text-gray-900">
                         👥 View Applicants
                       </Link>
                       <button 

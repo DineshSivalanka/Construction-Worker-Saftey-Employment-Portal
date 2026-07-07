@@ -63,7 +63,7 @@ function Jobs() {
 
                                         <div className="card-body">
 
-                                            <h4 className="text-primary">
+                                            <h4 className="text-[#D8125B]">
                                                 {job.jobTitle}
                                             </h4>
 

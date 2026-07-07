@@ -51,7 +51,7 @@ function PostJob() {
           <div className="col-md-8">
             <div className="card shadow-lg border-0 rounded-4">
               <div
-                className="card-header text-white rounded-top-4 py-3"
+                className="card-header text-gray-900 rounded-top-4 py-3"
                 style={{
                   background: "linear-gradient(135deg, #ff9800, #ff5722)",
                 }}

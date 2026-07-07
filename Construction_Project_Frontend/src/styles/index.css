@@ -1,8 +1,9 @@
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #0d6efd; /* Blue */
-  --secondary-color: #fd7e14; /* Orange */
+  --primary-color: #D8125B; /* Orange */
+  --secondary-color: #2C2E39; /* Yellow */
   --success-color: #198754; /* Green */
   --bg-color: #f8f9fa;
   --text-dark: #212529;

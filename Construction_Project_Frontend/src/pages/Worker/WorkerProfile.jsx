@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar';
 
 function WorkerProfile() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <main className="mx-auto max-w-3xl px-6 py-8">
         <div className="rounded-2xl bg-white p-8 shadow-sm">
@@ -12,7 +12,7 @@ function WorkerProfile() {
             <input className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Full Name" />
             <input className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Mobile" />
             <textarea className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Skills & Experience" rows="4"></textarea>
-            <button type="submit" className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Save Profile</button>
+            <button type="submit" className="w-full rounded-lg bg-[#D8125B] px-4 py-3 font-semibold text-gray-900 hover:bg-[#D8125B]">Save Profile</button>
           </form>
         </div>
       </main>

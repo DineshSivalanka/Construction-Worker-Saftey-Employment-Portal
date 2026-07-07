@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
 import { FaHardHat, FaBuilding, FaUserShield, FaMapMarkerAlt, FaMobileAlt, FaStar, FaCheckCircle } from "react-icons/fa";
 
 function Home() {
@@ -156,14 +157,7 @@ function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-gray-400 py-12 border-t border-gray-800">
-        <div className="container mx-auto px-4 text-center">
-          <h5 className="text-2xl font-bold text-white mb-4">Construction Worker Portal</h5>
-          <p className="mb-6">Built using React • Spring Boot • PostgreSQL • Tailwind CSS</p>
-          <div className="w-full h-px bg-gray-800 mb-6"></div>
-          <small className="text-sm tracking-wider">© 2026 All Rights Reserved.</small>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

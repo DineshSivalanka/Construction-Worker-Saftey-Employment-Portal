@@ -13,7 +13,7 @@ function Sidebar() {
       <h2 className="mb-4 text-lg font-semibold text-slate-800">Worker Menu</h2>
       <div className="flex flex-col gap-2">
         {links.map((link) => (
-          <Link key={link.to} to={link.to} className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">
+          <Link key={link.to} to={link.to} className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-orange-50 hover:text-[#D8125B]">
             {link.label}
           </Link>
         ))}

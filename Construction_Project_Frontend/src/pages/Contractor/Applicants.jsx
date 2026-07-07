@@ -53,7 +53,7 @@ const Applicants = () => {
 
       <div className="container mt-5 mb-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="text-primary fw-bold">👥 Job Applicants</h2>
+          <h2 className="text-[#D8125B] fw-bold">👥 Job Applicants</h2>
           <Link to="/contractor/my-jobs" className="btn btn-secondary fw-bold">
             🔙 Back to My Jobs
           </Link>
@@ -68,7 +68,7 @@ const Applicants = () => {
             {applicants.map((app) => (
               <div className="col-md-6 mb-4" key={app.applicationId}>
                 <div className="card shadow-sm border-0 h-100 rounded-4">
-                  <div className="card-header bg-dark text-white rounded-top-4 py-3">
+                  <div className="card-header bg-dark text-gray-900 rounded-top-4 py-3">
                     <h5 className="mb-0">
                       👷 {app.worker ? app.worker.workerName : "Unknown Worker"}
                     </h5>
