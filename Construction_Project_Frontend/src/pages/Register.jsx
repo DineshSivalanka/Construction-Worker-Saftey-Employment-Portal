@@ -1,29 +1,122 @@
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import { registerUser } from "../services/authService";
 
 function Register() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    mobileNumber: "",
+    role: "WORKER",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await registerUser(formData);
+
+      alert(response.data);
+
+      navigate("/login");
+    } catch (error) {
+      alert(
+        error.response?.data || "Registration Failed"
+      );
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <Navbar />
-      <main className="flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-8 shadow-lg">
-          <h1 className="mb-2 text-3xl font-semibold text-slate-900">Register</h1>
-          <p className="mb-6 text-slate-600">Choose your role and create your account.</p>
-          <div className="mb-6 flex flex-wrap gap-4">
-            <button className="rounded-lg bg-orange-600 px-4 py-2 font-semibold text-white">Worker</button>
-            <button className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-700">Contractor</button>
+
+      <div className="container">
+
+        <div className="row justify-content-center mt-5">
+
+          <div className="col-md-5">
+
+            <div className="card shadow-lg border-0">
+
+              <div className="card-header bg-warning text-dark text-center">
+
+                <h3>Register</h3>
+
+              </div>
+
+              <div className="card-body">
+
+                <form onSubmit={handleSubmit}>
+
+                  <div className="mb-3">
+
+                    <label className="form-label">
+                      Mobile Number
+                    </label>
+
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="mobileNumber"
+                      placeholder="Enter Mobile Number"
+                      value={formData.mobileNumber}
+                      onChange={handleChange}
+                      required
+                    />
+
+                  </div>
+
+                  <div className="mb-4">
+
+                    <label className="form-label">
+                      Select Role
+                    </label>
+
+                    <select
+                      className="form-select"
+                      name="role"
+                      value={formData.role}
+                      onChange={handleChange}
+                    >
+                      <option value="WORKER">
+                        Worker
+                      </option>
+
+                      <option value="CONTRACTOR">
+                        Contractor
+                      </option>
+
+                    </select>
+
+                  </div>
+
+                  <button
+                    className="btn btn-warning w-100 fw-bold"
+                  >
+                    Register
+                  </button>
+
+                </form>
+
+              </div>
+
+            </div>
+
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <input className="rounded-lg border border-slate-300 px-4 py-3" placeholder="Full Name" />
-            <input className="rounded-lg border border-slate-300 px-4 py-3" placeholder="Mobile Number" />
-            <input className="rounded-lg border border-slate-300 px-4 py-3" placeholder="Email" />
-            <input className="rounded-lg border border-slate-300 px-4 py-3" placeholder="Password" />
-          </div>
-          <button className="mt-6 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Register</button>
+
         </div>
-      </main>
-      <Footer />
-    </div>
+
+      </div>
+
+    </>
   );
 }
 

@@ -1,27 +1,158 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import { sendOtp, verifyOtp } from "../services/authService";
 
 function Login() {
-  const [mobile, setMobile] = useState('');
 
-  return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      <main className="flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-lg">
-          <h1 className="mb-2 text-3xl font-semibold text-slate-900">Login</h1>
-          <p className="mb-6 text-slate-600">Enter your mobile number to receive OTP.</p>
-          <label className="mb-2 block text-sm font-medium text-slate-700">Mobile Number</label>
-          <input value={mobile} onChange={(e) => setMobile(e.target.value)} className="mb-4 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-orange-500" placeholder="9876543210" />
-          <button className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Send OTP</button>
-          <p className="mt-4 text-sm text-slate-600">New here? <Link to="/register" className="font-semibold text-orange-600">Create account</Link></p>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+    const navigate = useNavigate();
+
+    const [mobileNumber, setMobileNumber] = useState("");
+    const [otp, setOtp] = useState("");
+
+    const [otpSent, setOtpSent] = useState(false);
+
+    const sendOtpHandler = async () => {
+
+        try {
+
+            const response = await sendOtp({
+                mobileNumber
+            });
+
+            alert(response.data);
+
+            setOtpSent(true);
+
+        } catch (error) {
+
+            alert(error.response?.data || "Unable to send OTP");
+
+        }
+
+    };
+
+    const verifyOtpHandler = async () => {
+
+        try {
+
+            const response = await verifyOtp({
+
+                mobileNumber,
+                otp
+
+            });
+
+            alert(response.data);
+
+            // Temporary redirect
+            navigate("/");
+
+        } catch (error) {
+
+            alert(error.response?.data || "Invalid OTP");
+
+        }
+
+    };
+
+    return (
+
+        <>
+            <Navbar />
+
+            <div className="container mt-5">
+
+                <div className="row justify-content-center">
+
+                    <div className="col-md-5">
+
+                        <div className="card shadow-lg">
+
+                            <div className="card-header bg-warning text-center">
+
+                                <h3>Login</h3>
+
+                            </div>
+
+                            <div className="card-body">
+
+                                <div className="mb-3">
+
+                                    <label>Mobile Number</label>
+
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Enter Mobile Number"
+                                        value={mobileNumber}
+                                        onChange={(e) =>
+                                            setMobileNumber(e.target.value)
+                                        }
+                                    />
+
+                                </div>
+
+                                {
+
+                                    !otpSent ?
+
+                                        <button
+                                            className="btn btn-warning w-100"
+                                            onClick={sendOtpHandler}
+                                        >
+
+                                            Send OTP
+
+                                        </button>
+
+                                        :
+
+                                        <>
+
+                                            <div className="mt-4 mb-3">
+
+                                                <label>OTP</label>
+
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Enter OTP"
+                                                    value={otp}
+                                                    onChange={(e) =>
+                                                        setOtp(e.target.value)
+                                                    }
+                                                />
+
+                                            </div>
+
+                                            <button
+                                                className="btn btn-success w-100"
+                                                onClick={verifyOtpHandler}
+                                            >
+
+                                                Verify OTP
+
+                                            </button>
+
+                                        </>
+
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </>
+
+    );
+
 }
 
 export default Login;
