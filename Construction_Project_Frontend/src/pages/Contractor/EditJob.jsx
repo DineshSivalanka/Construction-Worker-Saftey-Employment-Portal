@@ -1,27 +1,24 @@
-import { useParams } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import Navbar from '../../components/Navbar';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 
 function EditJob() {
-  const { id } = useParams();
+  const { jobId } = useParams();
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <>
       <Navbar />
-      <main className="mx-auto max-w-3xl px-6 py-8">
-        <div className="rounded-2xl bg-white p-8 shadow-sm">
-          <h1 className="mb-6 text-3xl font-semibold text-slate-900">Edit Job</h1>
-          <form className="space-y-4">
-            <input className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Job Title" defaultValue="House Construction" />
-            <textarea className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Job Description" rows="4"></textarea>
-            <input className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Location" defaultValue="New York, NY" />
-            <input className="w-full rounded-lg border border-slate-300 px-4 py-3" placeholder="Salary (per day)" defaultValue="₹900" />
-            <button type="submit" className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Save Changes</button>
-          </form>
+      <div className="container mt-5">
+        <h2>✏️ Edit Job #{jobId}</h2>
+        <div className="alert alert-info mt-3">
+          Edit Job feature is coming soon! The UI is ready for Step 6.
         </div>
-      </main>
-      <Footer />
-    </div>
+        <button className="btn btn-secondary mt-3" onClick={() => navigate("/contractor/my-jobs")}>
+          🔙 Back to My Jobs
+        </button>
+      </div>
+    </>
   );
 }
 

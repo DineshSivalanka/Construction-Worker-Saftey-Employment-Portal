@@ -1,32 +1,85 @@
-import Footer from '../../components/Footer';
-import Navbar from '../../components/Navbar';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import { getMyApplications } from "../../services/workerService";
 
-function MyApplications() {
-  const applications = [
-    { id: 1, jobTitle: 'House Construction', status: 'Pending' },
-    { id: 2, jobTitle: 'Road Repair', status: 'Accepted' },
-  ];
+const MyApplications = () => {
+  const workerId = localStorage.getItem("userId");
+  const [applications, setApplications] = useState([]);
+
+  useEffect(() => {
+    loadApplications();
+  }, []);
+
+  const loadApplications = async () => {
+    try {
+      const response = await getMyApplications(workerId);
+      setApplications(response.data);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load applications");
+    }
+  };
+
+  const getBadge = (status) => {
+    switch (status) {
+      case "ACCEPTED":
+        return "bg-success";
+      case "REJECTED":
+        return "bg-danger";
+      default:
+        return "bg-warning text-dark";
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <>
       <Navbar />
-      <main className="mx-auto max-w-5xl px-6 py-8">
-        <h1 className="mb-8 text-3xl font-semibold text-slate-900">My Applications</h1>
-        <div className="space-y-4">
-          {applications.map((app) => (
-            <div key={app.id} className="rounded-lg border border-slate-200 bg-white p-4 flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-slate-900">{app.jobTitle}</h3>
-                <p className="text-sm text-slate-600">Status: {app.status}</p>
-              </div>
-              <span className={`rounded-full px-3 py-1 text-sm font-medium ${app.status === 'Accepted' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{app.status}</span>
-            </div>
-          ))}
+      <div className="container mt-5 mb-5">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="text-warning fw-bold">📋 My Applications</h2>
+          <Link to="/worker/jobs" className="btn btn-primary fw-bold">
+            🔍 Find More Jobs
+          </Link>
         </div>
-      </main>
-      <Footer />
-    </div>
+
+        {applications.length === 0 ? (
+          <div className="alert alert-info text-center rounded-4 shadow-sm border-0 py-4">
+            <h4 className="mb-0">You haven't applied for any jobs yet.</h4>
+          </div>
+        ) : (
+          <div className="row">
+            {applications.map((app) => (
+              <div className="col-md-6 mb-4" key={app.applicationId}>
+                <div className="card shadow-sm border-0 h-100 rounded-4">
+                  <div className="card-header bg-dark text-white rounded-top-4 py-3">
+                    <h5 className="mb-0">{app.job ? app.job.jobTitle : "Unknown Job"}</h5>
+                  </div>
+                  <div className="card-body">
+                    <p>
+                      <strong>Location:</strong> {app.job ? app.job.location : "N/A"}
+                    </p>
+                    <p>
+                      <strong>Salary:</strong> ₹{app.job ? app.job.salary : 0}
+                    </p>
+
+                    <hr />
+
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span className="fw-bold">Status:</span>
+                      <span className={`badge ${getBadge(app.status)} fs-6`}>
+                        {app.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
-}
+};
 
 export default MyApplications;
