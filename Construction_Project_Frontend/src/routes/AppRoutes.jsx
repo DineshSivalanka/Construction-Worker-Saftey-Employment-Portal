@@ -20,6 +20,8 @@ import MyJobs from '../pages/contractor/MyJobs';
 import EditJob from '../pages/contractor/EditJob';
 import Applicants from '../pages/contractor/Applicants';
 
+import ProtectedRoute from '../components/ProtectedRoute';
+
 function AppRoutes() {
   return (
     <Routes>
@@ -27,21 +29,24 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       
-      <Route path="/worker/dashboard" element={<WorkerDashboard />} />
-      <Route path="/worker/profile" element={<Profile />} />
-      <Route path="/worker/jobs" element={<Jobs />} />
-      <Route path="/worker/my-applications" element={<MyApplications />} />
+      {/* Worker Routes */}
+      <Route path="/worker/dashboard" element={<ProtectedRoute allowedRoles={["WORKER"]}><WorkerDashboard /></ProtectedRoute>} />
+      <Route path="/worker/profile" element={<ProtectedRoute allowedRoles={["WORKER"]}><Profile /></ProtectedRoute>} />
+      <Route path="/worker/jobs" element={<ProtectedRoute allowedRoles={["WORKER"]}><Jobs /></ProtectedRoute>} />
+      <Route path="/worker/my-applications" element={<ProtectedRoute allowedRoles={["WORKER"]}><MyApplications /></ProtectedRoute>} />
 
-      <Route path="/contractor/dashboard" element={<ContractorDashboard />} />
-      <Route path="/contractor/post-job" element={<PostJob />} />
-      <Route path="/contractor/my-jobs" element={<MyJobs />} />
-      <Route path="/contractor/edit-job/:jobId" element={<EditJob />} />
-      <Route path="/contractor/applicants/:jobId" element={<Applicants />} />
+      {/* Contractor Routes */}
+      <Route path="/contractor/dashboard" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><ContractorDashboard /></ProtectedRoute>} />
+      <Route path="/contractor/post-job" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><PostJob /></ProtectedRoute>} />
+      <Route path="/contractor/my-jobs" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><MyJobs /></ProtectedRoute>} />
+      <Route path="/contractor/edit-job/:jobId" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><EditJob /></ProtectedRoute>} />
+      <Route path="/contractor/applicants/:jobId" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><Applicants /></ProtectedRoute>} />
 
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/workers" element={<AdminWorkers />} />
-      <Route path="/admin/contractors" element={<AdminContractors />} />
-      <Route path="/admin/jobs" element={<AdminJobs />} />
+      {/* Admin Routes */}
+      <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminDashboard /></ProtectedRoute>} />
+      <Route path="/admin/workers" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminWorkers /></ProtectedRoute>} />
+      <Route path="/admin/contractors" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminContractors /></ProtectedRoute>} />
+      <Route path="/admin/jobs" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminJobs /></ProtectedRoute>} />
     </Routes>
   );
 }
