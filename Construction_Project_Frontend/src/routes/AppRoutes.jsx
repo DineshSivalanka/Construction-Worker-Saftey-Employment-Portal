@@ -31,7 +31,7 @@ function AppRoutes() {
       <Route path="/contractor/dashboard" element={<ContractorDashboard />} />
       <Route path="/contractor/post-job" element={<PostJob />} />
       <Route path="/contractor/my-jobs" element={<MyJobs />} />
-      <Route path="/contractor/applicants" element={<Applicants />} />
+      <Route path="/contractor/applicants/:jobId" element={<Applicants />} />
 
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Routes>

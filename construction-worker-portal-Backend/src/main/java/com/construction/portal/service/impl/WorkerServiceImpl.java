@@ -35,7 +35,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public WorkerDTO getWorkerProfile(Integer workerId) {
 
-        WorkerProfile worker = workerRepository.findById(workerId)
+        WorkerProfile worker = workerRepository.findByUserUserId(workerId)
                 .orElseThrow(() -> new RuntimeException("Worker not found"));
 
         WorkerDTO dto = new WorkerDTO();
@@ -56,7 +56,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public WorkerDTO updateWorkerProfile(Integer workerId, WorkerDTO dto) {
 
-        WorkerProfile worker = workerRepository.findById(workerId)
+        WorkerProfile worker = workerRepository.findByUserUserId(workerId)
                 .orElseThrow(() -> new RuntimeException("Worker not found"));
 
         worker.setWorkerName(dto.getWorkerName());
@@ -83,12 +83,12 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public String applyForJob(Integer workerId, Integer jobId) {
 
-        if (applicationRepository.existsByJobJobIdAndWorkerWorkerId(jobId, workerId)) {
+        WorkerProfile worker = workerRepository.findByUserUserId(workerId)
+                .orElseThrow(() -> new RuntimeException("Worker not found"));
+
+        if (applicationRepository.existsByJobJobIdAndWorkerWorkerId(jobId, worker.getWorkerId())) {
             return "You have already applied for this job.";
         }
-
-        WorkerProfile worker = workerRepository.findById(workerId)
-                .orElseThrow(() -> new RuntimeException("Worker not found"));
 
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
@@ -105,7 +105,9 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public List<JobApplication> getApplications(Integer workerId) {
+        WorkerProfile worker = workerRepository.findByUserUserId(workerId)
+                .orElseThrow(() -> new RuntimeException("Worker not found"));
 
-        return applicationRepository.findByWorkerWorkerId(workerId);
+        return applicationRepository.findByWorkerWorkerId(worker.getWorkerId());
     }
 }

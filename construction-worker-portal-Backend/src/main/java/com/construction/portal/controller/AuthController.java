@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
-    public String verifyOtp(@Valid @RequestBody OtpVerificationRequest request) {
+    public com.construction.portal.dto.LoginResponse verifyOtp(@Valid @RequestBody OtpVerificationRequest request) {
         return authService.verifyOtp(request);
     }
 }

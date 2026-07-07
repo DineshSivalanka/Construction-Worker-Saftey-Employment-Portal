@@ -105,20 +105,27 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String verifyOtp(OtpVerificationRequest request) {
+    public com.construction.portal.dto.LoginResponse verifyOtp(OtpVerificationRequest request) {
 
         String storedOtp = otpStore.get(request.getMobileNumber());
 
         if (storedOtp == null) {
-            return "OTP Expired";
+            throw new RuntimeException("OTP Expired");
         }
 
         if (!storedOtp.equals(request.getOtp())) {
-            return "Invalid OTP";
+            throw new RuntimeException("Invalid OTP");
         }
 
         otpStore.remove(request.getMobileNumber());
 
-        return "Login Successful";
+        User user = userRepository.findByMobileNumber(request.getMobileNumber())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new com.construction.portal.dto.LoginResponse(
+                Long.valueOf(user.getUserId()),
+                user.getRole().name(),
+                "Login Successful"
+        );
     }
 }

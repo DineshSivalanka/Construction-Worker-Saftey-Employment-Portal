@@ -34,7 +34,7 @@ public class ContractorServiceImpl implements ContractorService {
     @Override
     public ContractorDTO getProfile(Integer contractorId) {
 
-        ContractorProfile contractor = contractorRepository.findById(contractorId)
+        ContractorProfile contractor = contractorRepository.findByUserUserId(contractorId)
                 .orElseThrow(() -> new RuntimeException("Contractor not found"));
 
         ContractorDTO dto = new ContractorDTO();
@@ -52,7 +52,7 @@ public class ContractorServiceImpl implements ContractorService {
     @Override
     public ContractorDTO updateProfile(Integer contractorId, ContractorDTO dto) {
 
-        ContractorProfile contractor = contractorRepository.findById(contractorId)
+        ContractorProfile contractor = contractorRepository.findByUserUserId(contractorId)
                 .orElseThrow(() -> new RuntimeException("Contractor not found"));
 
         contractor.setContractorName(dto.getContractorName());
@@ -71,7 +71,7 @@ public class ContractorServiceImpl implements ContractorService {
     @Override
     public Job createJob(Integer contractorId, Job job) {
 
-        ContractorProfile contractor = contractorRepository.findById(contractorId)
+        ContractorProfile contractor = contractorRepository.findByUserUserId(contractorId)
                 .orElseThrow(() -> new RuntimeException("Contractor not found"));
 
         job.setContractor(contractor);
@@ -81,7 +81,10 @@ public class ContractorServiceImpl implements ContractorService {
 
     @Override
     public List<Job> getMyJobs(Integer contractorId) {
-        return jobRepository.findByContractorContractorId(contractorId);
+        ContractorProfile contractor = contractorRepository.findByUserUserId(contractorId)
+                .orElseThrow(() -> new RuntimeException("Contractor not found"));
+
+        return jobRepository.findByContractorContractorId(contractor.getContractorId());
     }
 
     @Override

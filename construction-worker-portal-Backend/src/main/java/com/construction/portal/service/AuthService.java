@@ -10,6 +10,6 @@ public interface AuthService {
 
     String sendOtp(LoginRequest request);
 
-    String verifyOtp(OtpVerificationRequest request);
+    com.construction.portal.dto.LoginResponse verifyOtp(OtpVerificationRequest request);
 
 }
