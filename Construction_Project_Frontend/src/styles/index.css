@@ -1,24 +1,54 @@
-@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #111827;
-  background-color: #fff7ed;
-  line-height: 1.5;
-  font-weight: 400;
+  --primary-color: #0d6efd; /* Blue */
+  --secondary-color: #fd7e14; /* Orange */
+  --success-color: #198754; /* Green */
+  --bg-color: #f8f9fa;
+  --text-dark: #212529;
+  --text-muted: #6c757d;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
 }
 
-* {
-  box-sizing: border-box;
+.text-orange {
+  color: var(--secondary-color) !important;
 }
 
-button {
-  cursor: pointer;
+.bg-orange {
+  background-color: var(--secondary-color) !important;
+  color: white;
+}
+
+.btn-orange {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+}
+
+.btn-orange:hover {
+  background-color: #e96b02;
+  color: white;
+}
+
+/* Custom card shadow for premium feel */
+.custom-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.hero-section {
+  background-color: #fff3e6;
+  padding: 80px 0;
 }
