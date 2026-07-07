@@ -83,7 +83,7 @@ function WorkerDashboard() {
                 </p>
 
                 <Link
-                  to="/worker/applications"
+                  to="/worker/my-applications"
                   className="btn btn-primary"
                 >
                   View Applications

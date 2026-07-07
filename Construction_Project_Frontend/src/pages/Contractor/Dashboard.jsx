@@ -78,7 +78,7 @@ function ContractorDashboard() {
 
                 <Link
                   className="btn btn-success"
-                  to="/contractor/applicants"
+                  to="/contractor/my-jobs"
                 >
                   View Applicants
                 </Link>
