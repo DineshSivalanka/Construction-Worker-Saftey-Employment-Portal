@@ -1,4 +1,16 @@
-import API from './api';
+import api from "./api";
 
-export const login = (payload) => API.post('/auth/login', payload);
-export const register = (payload) => API.post('/auth/register', payload);
+// Register
+export const registerUser = async (data) => {
+  return await api.post("/auth/register", data);
+};
+
+// Send OTP
+export const sendOtp = async (data) => {
+  return await api.post("/auth/send-otp", data);
+};
+
+// Verify OTP
+export const verifyOtp = async (data) => {
+  return await api.post("/auth/verify-otp", data);
+};
