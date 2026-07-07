@@ -1,5 +1,6 @@
 package com.construction.portal.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +18,17 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
+    public String register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
     }
 
     @PostMapping("/send-otp")
-    public String sendOtp(@RequestBody LoginRequest request) {
+    public String sendOtp(@Valid @RequestBody LoginRequest request) {
         return authService.sendOtp(request);
     }
 
     @PostMapping("/verify-otp")
-    public String verifyOtp(@RequestBody OtpVerificationRequest request) {
+    public String verifyOtp(@Valid @RequestBody OtpVerificationRequest request) {
         return authService.verifyOtp(request);
     }
 }

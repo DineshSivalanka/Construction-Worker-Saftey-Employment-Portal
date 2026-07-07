@@ -2,6 +2,7 @@ package com.construction.portal.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,8 +44,10 @@ public class ContractorProfile {
     private String previousWorkDetails;
 
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Job> jobs;
 
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ContractorReview> reviews;
 }
