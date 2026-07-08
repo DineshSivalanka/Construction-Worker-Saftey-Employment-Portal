@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { auth } from "../firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { registerUser } from "../services/authService";
+import { sendOtp, registerUser } from "../services/authService";
 import { useTranslation } from "react-i18next";
 
 function Register() {
@@ -30,36 +28,7 @@ function Register() {
   const [otpSent, setOtpSent] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState(null);
 
-  // Initialize reCAPTCHA on component mount
-  useEffect(() => {
-    if (window.recaptchaVerifier) {
-      try {
-        window.recaptchaVerifier.clear();
-      } catch (e) {
-        console.error("Error clearing recaptcha", e);
-      }
-      window.recaptchaVerifier = null;
-    }
 
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible',
-      'callback': (response) => {
-        // reCAPTCHA solved
-      },
-      'expired-callback': () => {
-        // Response expired.
-      }
-    });
-
-    return () => {
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) { }
-        window.recaptchaVerifier = null;
-      }
-    };
-  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -76,35 +45,23 @@ function Register() {
       return;
     }
 
-    const phoneNumber = "+91" + formData.mobileNumber;
-    const appVerifier = window.recaptchaVerifier;
-
     try {
-      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      setConfirmationResult(confirmation);
+      await sendOtp({ mobileNumber: formData.mobileNumber });
       setOtpSent(true);
-      alert("OTP Sent via Firebase!");
+      alert("OTP Sent!");
     } catch (error) {
       console.error(error);
-      alert("Firebase Error: " + error.message);
-      if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.render().then(function (widgetId) {
-          window.grecaptcha.reset(widgetId);
-        });
-      }
+      alert("Error sending OTP");
     }
   };
 
   const verifyOtpAndRegister = async (e) => {
     e.preventDefault();
-    if (!confirmationResult) return;
 
     try {
-      // 1. Verify OTP with Firebase
-      await confirmationResult.confirm(otp);
-
-      // 2. Register User with our backend
-      const response = await registerUser(formData);
+      // Register User with our backend (the backend should theoretically verify the OTP)
+      const dataToSubmit = { ...formData, otp };
+      const response = await registerUser(dataToSubmit);
 
       alert(response.data || "Registration Successful");
       navigate("/login");
@@ -164,7 +121,6 @@ function Register() {
                     </select>
                   </div>
 
-                  <div id="recaptcha-container"></div>
 
                   {!otpSent ? (
                     <button

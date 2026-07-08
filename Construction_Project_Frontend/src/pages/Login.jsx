@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { auth } from "../firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { verifyOtp } from "../services/authService"; // We will still use this to establish session with our Spring Boot backend
+import { sendOtp, verifyOtp } from "../services/authService";
 import { useTranslation } from "react-i18next";
 
 function Login() {
@@ -26,37 +24,7 @@ function Login() {
     const [otpSent, setOtpSent] = useState(false);
     const [confirmationResult, setConfirmationResult] = useState(null);
 
-    // Initialize reCAPTCHA on component mount
-    useEffect(() => {
-        // Clear any old verifier to prevent "reCAPTCHA client element has been removed" error
-        if (window.recaptchaVerifier) {
-            try {
-                window.recaptchaVerifier.clear();
-            } catch (e) {
-                console.error("Error clearing recaptcha", e);
-            }
-            window.recaptchaVerifier = null;
-        }
 
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {
-                // reCAPTCHA solved
-            },
-            'expired-callback': () => {
-                // Response expired.
-            }
-        });
-
-        return () => {
-            if (window.recaptchaVerifier) {
-                try {
-                    window.recaptchaVerifier.clear();
-                } catch (e) { }
-                window.recaptchaVerifier = null;
-            }
-        };
-    }, []);
 
     const sendOtpHandler = async () => {
         if (mobileNumber.length !== 10) {
@@ -64,42 +32,21 @@ function Login() {
             return;
         }
 
-        const phoneNumber = "+91" + mobileNumber; // Assuming India for this project
-        const appVerifier = window.recaptchaVerifier;
-
         try {
-            const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-            setConfirmationResult(confirmation);
+            await sendOtp({ mobileNumber });
             setOtpSent(true);
-            alert("OTP Sent via Firebase!");
+            alert("OTP Sent!");
         } catch (error) {
             console.error(error);
-            alert("Firebase Error: " + error.message + "\n\nPlease ensure Phone Auth is enabled and 'localhost' is added to Authorized Domains in Firebase.");
-            // Reset reCAPTCHA if it failed
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.render().then(function (widgetId) {
-                    window.grecaptcha.reset(widgetId);
-                });
-            }
+            alert("Error sending OTP");
         }
     };
 
     const verifyOtpHandler = async () => {
-        if (!confirmationResult) return;
-
         try {
-            // 1. Verify OTP with Firebase
-            const result = await confirmationResult.confirm(otp);
-            const user = result.user;
-
-            // Optional: get Firebase ID Token if you want to verify on backend securely
-            // const idToken = await user.getIdToken();
-
-            // 2. Notify our Spring Boot backend that verification was successful
-            // We pass the verified mobile number so the backend can log them in.
             const response = await verifyOtp({
                 mobileNumber: mobileNumber,
-                otp: "FIREBASE_VERIFIED" // Our backend will bypass normal OTP check if it sees this
+                otp: otp
             });
 
             const data = response.data;
@@ -152,7 +99,6 @@ function Login() {
                                     </div>
                                 </div>
 
-                                <div id="recaptcha-container"></div>
 
                                 {!otpSent ? (
                                     <button className="btn w-100 text-white fw-bold" style={{ backgroundColor: '#D8125B' }} onClick={sendOtpHandler}>
