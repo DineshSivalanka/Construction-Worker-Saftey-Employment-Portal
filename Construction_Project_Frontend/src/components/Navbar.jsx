@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaHardHat, FaBars, FaTimes, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { FaHardHat, FaBars, FaTimes, FaSignOutAlt, FaUserCircle, FaChevronDown } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 function Navbar() {
@@ -9,10 +9,22 @@ function Navbar() {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   const LanguageSelector = ({ className = "" }) => (
@@ -109,17 +121,34 @@ function Navbar() {
 
                 <div className="flex items-center gap-4 ml-6 pl-6 border-l border-white/20">
                   <LanguageSelector />
-                  <div className="flex items-center text-white/90 gap-2 ml-2">
-                    <FaUserCircle size={20} />
-                    <span className="text-sm font-medium tracking-wide">{role}</span>
+                  
+                  {/* Profile Dropdown */}
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                      className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/10 focus:outline-none"
+                    >
+                      <FaUserCircle size={20} />
+                      <span className="text-sm font-medium tracking-wide">{role}</span>
+                      <FaChevronDown size={12} className={`transition-transform duration-200 ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {isProfileDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl overflow-hidden z-50 border border-gray-100 py-2">
+                        <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                          <p className="text-xs text-gray-500 font-semibold uppercase">{t("navbar.loggedInAs", "Logged in as")}</p>
+                          <p className="text-sm font-bold text-gray-800 truncate">{role}</p>
+                        </div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 font-semibold transition-colors text-left"
+                        >
+                          <FaSignOutAlt />
+                          <span>{t("navbar.logout")}</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-500/90 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors shadow-sm"
-                  >
-                    <FaSignOutAlt />
-                    <span>{t("navbar.logout")}</span>
-                  </button>
                 </div>
               </>
             )}

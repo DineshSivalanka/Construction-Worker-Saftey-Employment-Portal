@@ -10,6 +10,17 @@ function Register() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
+
+    if (userId && role) {
+      if (role === "WORKER") navigate("/worker/dashboard");
+      else if (role === "CONTRACTOR") navigate("/contractor/dashboard");
+      else if (role === "ADMIN") navigate("/admin/dashboard");
+    }
+  }, [navigate]);
+
   const [formData, setFormData] = useState({
     mobileNumber: "",
     role: "WORKER",

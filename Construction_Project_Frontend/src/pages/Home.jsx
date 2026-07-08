@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { FaHardHat, FaBuilding, FaUserShield, FaMapMarkerAlt, FaMobileAlt, FaStar, FaCheckCircle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
+
+    if (userId && role) {
+      if (role === "WORKER") navigate("/worker/dashboard");
+      else if (role === "CONTRACTOR") navigate("/contractor/dashboard");
+      else if (role === "ADMIN") navigate("/admin/dashboard");
+    }
+  }, [navigate]);
   return (
     <div className="bg-gray-50 min-h-screen font-sans text-gray-800">
       <Navbar />
