@@ -117,7 +117,6 @@ function Register() {
                     >
                       <option value="WORKER">{t("register.worker")}</option>
                       <option value="CONTRACTOR">{t("register.contractor")}</option>
-                      <option value="ADMIN">{t("register.admin")}</option>
                     </select>
                   </div>
 
