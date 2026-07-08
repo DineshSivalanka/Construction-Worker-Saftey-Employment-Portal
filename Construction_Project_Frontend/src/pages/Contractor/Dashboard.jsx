@@ -1,8 +1,10 @@
 import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import { FaBuilding, FaPlusCircle, FaClipboardList, FaUsers } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function ContractorDashboard() {
+  const { t } = useTranslation();
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <Navbar />
@@ -15,9 +17,9 @@ function ContractorDashboard() {
           </div>
           <div>
             <h2 className="text-3xl font-bold text-gray-900">
-              Contractor Dashboard
+              {t("contractorDashboard.title")}
             </h2>
-            <p className="text-gray-500 mt-1">Manage your job postings, review applicants, and grow your workforce.</p>
+            <p className="text-gray-500 mt-1">{t("contractorDashboard.subtitle")}</p>
           </div>
         </div>
 
@@ -28,15 +30,15 @@ function ContractorDashboard() {
             <div className="w-16 h-16 bg-amber-50 text-[#2C2E39] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <FaPlusCircle size={32} />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 mb-3">Post New Job</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-3">{t("contractorDashboard.postJobTitle")}</h4>
             <p className="text-gray-500 flex-grow mb-8">
-              Create a new job posting specifying required skills, location, and workers needed.
+              {t("contractorDashboard.postJobDesc")}
             </p>
             <Link
               to="/contractor/post-job"
               className="w-full py-3 px-4 bg-amber-50 text-amber-700 font-semibold rounded-xl hover:bg-amber-500 hover:text-white transition-colors duration-300 text-center"
             >
-              Post Job
+              {t("contractorDashboard.postJobButton")}
             </Link>
           </div>
 
@@ -45,15 +47,15 @@ function ContractorDashboard() {
             <div className="w-16 h-16 bg-orange-50 text-[#D8125B] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <FaClipboardList size={32} />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 mb-3">My Jobs</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-3">{t("contractorDashboard.myJobsTitle")}</h4>
             <p className="text-gray-500 flex-grow mb-8">
-              View, edit, or delete the construction jobs you have currently posted on the platform.
+              {t("contractorDashboard.myJobsDesc")}
             </p>
             <Link
               to="/contractor/my-jobs"
               className="w-full py-3 px-4 bg-orange-50 text-orange-700 font-semibold rounded-xl hover:bg-[#D8125B] hover:text-white transition-colors duration-300 text-center"
             >
-              Manage Jobs
+              {t("contractorDashboard.myJobsButton")}
             </Link>
           </div>
 
@@ -62,15 +64,15 @@ function ContractorDashboard() {
             <div className="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <FaUsers size={32} />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 mb-3">Applicants</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-3">{t("contractorDashboard.appsTitle")}</h4>
             <p className="text-gray-500 flex-grow mb-8">
-              Review incoming applications, check worker profiles, and accept or reject candidates.
+              {t("contractorDashboard.appsDesc")}
             </p>
             <Link
               to="/contractor/my-jobs"
               className="w-full py-3 px-4 bg-green-50 text-green-700 font-semibold rounded-xl hover:bg-green-600 hover:text-white transition-colors duration-300 text-center"
             >
-              View Applicants
+              {t("contractorDashboard.appsButton")}
             </Link>
           </div>
 

@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { getWorkers, getContractors, getJobs } from "../../services/adminService";
+import { useTranslation } from "react-i18next";
 
 function AdminDashboard() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState({
     workers: 0,
     contractors: 0,
@@ -38,7 +40,7 @@ function AdminDashboard() {
       <Navbar />
 
       <div className="container mt-5">
-        <h2 className="text-[#D8125B] fw-bold mb-4">👑 Admin Dashboard</h2>
+        <h2 className="text-[#D8125B] fw-bold mb-4">{t("adminDashboard.title")}</h2>
 
         <div className="row">
           <div className="col-md-4 mb-4">
@@ -46,9 +48,9 @@ function AdminDashboard() {
               <div className="card-body">
                 <h1 className="display-4">👷</h1>
                 <h3 className="fw-bold">{stats.workers}</h3>
-                <h5 className="text-muted">Total Workers</h5>
+                <h5 className="text-muted">{t("adminDashboard.totalWorkers")}</h5>
                 <Link to="/admin/workers" className="btn btn-primary mt-3 w-100">
-                  Manage Workers
+                  {t("adminDashboard.manageWorkers")}
                 </Link>
               </div>
             </div>
@@ -59,9 +61,9 @@ function AdminDashboard() {
               <div className="card-body">
                 <h1 className="display-4">🏗️</h1>
                 <h3 className="fw-bold">{stats.contractors}</h3>
-                <h5 className="text-muted">Total Contractors</h5>
+                <h5 className="text-muted">{t("adminDashboard.totalContractors")}</h5>
                 <Link to="/admin/contractors" className="btn btn-warning text-dark fw-bold mt-3 w-100">
-                  Manage Contractors
+                  {t("adminDashboard.manageContractors")}
                 </Link>
               </div>
             </div>
@@ -72,9 +74,9 @@ function AdminDashboard() {
               <div className="card-body">
                 <h1 className="display-4">📋</h1>
                 <h3 className="fw-bold">{stats.jobs}</h3>
-                <h5 className="text-muted">Total Jobs</h5>
+                <h5 className="text-muted">{t("adminDashboard.totalJobs")}</h5>
                 <Link to="/admin/jobs" className="btn btn-success mt-3 w-100">
-                  Manage Jobs
+                  {t("adminDashboard.manageJobs")}
                 </Link>
               </div>
             </div>

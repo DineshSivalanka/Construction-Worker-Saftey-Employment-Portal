@@ -1,8 +1,10 @@
 import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import { FaUserCircle, FaBriefcase, FaFileAlt } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function WorkerDashboard() {
+  const { t } = useTranslation();
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <Navbar />
@@ -14,9 +16,9 @@ function WorkerDashboard() {
           </div>
           <div>
             <h2 className="text-3xl font-bold text-gray-900">
-              Worker Dashboard
+              {t("workerDashboard.title")}
             </h2>
-            <p className="text-gray-500 mt-1">Manage your profile, browse jobs, and track your applications.</p>
+            <p className="text-gray-500 mt-1">{t("workerDashboard.subtitle")}</p>
           </div>
         </div>
 
@@ -27,15 +29,15 @@ function WorkerDashboard() {
             <div className="w-16 h-16 bg-orange-50 text-[#D8125B] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <FaUserCircle size={32} />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 mb-3">My Profile</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-3">{t("workerDashboard.profileTitle")}</h4>
             <p className="text-gray-500 flex-grow mb-8">
-              Keep your personal details, skills, and work experience up to date to attract more contractors.
+              {t("workerDashboard.profileDesc")}
             </p>
             <Link
               to="/worker/profile"
               className="w-full py-3 px-4 bg-orange-50 text-orange-700 font-semibold rounded-xl hover:bg-[#D8125B] hover:text-white transition-colors duration-300 text-center"
             >
-              View Profile
+              {t("workerDashboard.profileButton")}
             </Link>
           </div>
 
@@ -44,15 +46,15 @@ function WorkerDashboard() {
             <div className="w-16 h-16 bg-orange-50 text-[#D8125B] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <FaBriefcase size={32} />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 mb-3">Available Jobs</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-3">{t("workerDashboard.jobsTitle")}</h4>
             <p className="text-gray-500 flex-grow mb-8">
-              Browse all open jobs posted by contractors and find the perfect match for your skills.
+              {t("workerDashboard.jobsDesc")}
             </p>
             <Link
               to="/worker/jobs"
               className="w-full py-3 px-4 bg-orange-50 text-orange-700 font-semibold rounded-xl hover:bg-[#D8125B] hover:text-white transition-colors duration-300 text-center"
             >
-              View Jobs
+              {t("workerDashboard.jobsButton")}
             </Link>
           </div>
 
@@ -61,15 +63,15 @@ function WorkerDashboard() {
             <div className="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <FaFileAlt size={32} />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 mb-3">My Applications</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-3">{t("workerDashboard.appsTitle")}</h4>
             <p className="text-gray-500 flex-grow mb-8">
-              Check the status of jobs you have applied for and track responses from contractors.
+              {t("workerDashboard.appsDesc")}
             </p>
             <Link
               to="/worker/my-applications"
               className="w-full py-3 px-4 bg-green-50 text-green-700 font-semibold rounded-xl hover:bg-green-600 hover:text-white transition-colors duration-300 text-center"
             >
-              View Applications
+              {t("workerDashboard.appsButton")}
             </Link>
           </div>
 

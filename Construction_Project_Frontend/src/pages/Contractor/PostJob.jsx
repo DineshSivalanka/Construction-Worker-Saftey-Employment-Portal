@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { createJob } from "../../services/contractorService";
 import { FaBriefcase, FaArrowLeft, FaPaperPlane } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function PostJob() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const contractorId = localStorage.getItem("userId");
 
@@ -35,11 +37,11 @@ function PostJob() {
 
     try {
       await createJob(contractorId, payload);
-      alert("Job posted successfully!");
+      alert(t("contractorPostJob.success"));
       navigate("/contractor/my-jobs");
     } catch (error) {
       console.error(error);
-      alert("Failed to post job. Please try again.");
+      alert(t("contractorPostJob.error"));
     }
   };
 
@@ -58,6 +60,14 @@ function PostJob() {
                 <h3 className="fw-bold text-[#D8125B] mb-0 d-flex align-items-center gap-2">
                   <FaBriefcase /> Post New Job
                 </h3>
+            <div className="card shadow-lg border-0 rounded-4">
+              <div
+                className="card-header text-gray-900 rounded-top-4 py-3"
+                style={{
+                  background: "linear-gradient(135deg, #ff9800, #ff5722)",
+                }}
+              >
+                <h3 className="mb-0 text-center fw-bold">{t("contractorPostJob.title")}</h3>
               </div>
 
               <div className="card-body p-0">
@@ -65,11 +75,12 @@ function PostJob() {
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <label className="form-label fw-bold text-gray-700">Job Title</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.jobTitle")}</label>
                       <input
                         type="text"
                         className="form-control rounded-xl border-gray-200"
                         name="jobTitle"
-                        placeholder="e.g. Mason, Plumber, Electrician"
+                        placeholder={t("contractorPostJob.jobTitlePlaceholder")}
                         value={job.jobTitle}
                         onChange={handleChange}
                         required
@@ -78,11 +89,12 @@ function PostJob() {
 
                     <div className="col-md-6 mb-3">
                       <label className="form-label fw-bold text-gray-700">Location</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.location")}</label>
                       <input
                         type="text"
                         className="form-control rounded-xl border-gray-200"
                         name="location"
-                        placeholder="City or Site Address"
+                        placeholder={t("contractorPostJob.locationPlaceholder")}
                         value={job.location}
                         onChange={handleChange}
                         required
@@ -93,6 +105,7 @@ function PostJob() {
                   <div className="row">
                     <div className="col-md-4 mb-3">
                       <label className="form-label fw-bold text-gray-700">Working Hours</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.workingHours")}</label>
                       <input
                         type="text"
                         className="form-control rounded-xl border-gray-200"
@@ -105,11 +118,12 @@ function PostJob() {
 
                     <div className="col-md-4 mb-3">
                       <label className="form-label fw-bold text-gray-700">Salary (₹)</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.salary")}</label>
                       <input
                         type="number"
                         className="form-control rounded-xl border-gray-200"
                         name="salary"
-                        placeholder="Per Day"
+                        placeholder={t("contractorPostJob.salaryPlaceholder")}
                         value={job.salary}
                         onChange={handleChange}
                         required
@@ -119,6 +133,7 @@ function PostJob() {
 
                     <div className="col-md-4 mb-3">
                       <label className="form-label fw-bold text-gray-700">Workers Required</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.workersRequired")}</label>
                       <input
                         type="number"
                         className="form-control rounded-xl border-gray-200"
@@ -133,6 +148,7 @@ function PostJob() {
 
                   <div className="mb-3">
                     <label className="form-label fw-bold text-gray-700">Minimum Experience Required (Years)</label>
+                    <label className="form-label fw-bold">{t("contractorPostJob.experienceRequired")}</label>
                     <input
                       type="number"
                       className="form-control rounded-xl border-gray-200"
@@ -146,11 +162,12 @@ function PostJob() {
 
                   <div className="mb-4">
                     <label className="form-label fw-bold text-gray-700">Job Description</label>
+                    <label className="form-label fw-bold">{t("contractorPostJob.description")}</label>
                     <textarea
                       className="form-control rounded-xl border-gray-200"
                       name="description"
                       rows="4"
-                      placeholder="Describe the job role and requirements..."
+                      placeholder={t("contractorPostJob.descriptionPlaceholder")}
                       value={job.description}
                       onChange={handleChange}
                       required
@@ -175,6 +192,12 @@ function PostJob() {
                       <FaPaperPlane /> Post Job
                     </button>
                   </div>
+                  <button
+                    type="submit"
+                    className="btn btn-warning w-100 fw-bold fs-5 shadow"
+                  >
+                    {t("contractorPostJob.postJobButton")}
+                  </button>
                 </form>
               </div>
             </div>

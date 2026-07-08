@@ -1,52 +1,34 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { auth } from "../firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { registerUser } from "../services/authService";
+import { sendOtp, registerUser } from "../services/authService";
+import { useTranslation } from "react-i18next";
 
 function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
+
+    if (userId && role) {
+      if (role === "WORKER") navigate("/worker/dashboard");
+      else if (role === "CONTRACTOR") navigate("/contractor/dashboard");
+      else if (role === "ADMIN") navigate("/admin/dashboard");
+    }
+  }, [navigate]);
 
   const [formData, setFormData] = useState({
     mobileNumber: "",
     role: "WORKER",
   });
-  
+
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState(null);
 
-  // Initialize reCAPTCHA on component mount
-  useEffect(() => {
-    if (window.recaptchaVerifier) {
-      try {
-        window.recaptchaVerifier.clear();
-      } catch (e) {
-        console.error("Error clearing recaptcha", e);
-      }
-      window.recaptchaVerifier = null;
-    }
 
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible',
-      'callback': (response) => {
-        // reCAPTCHA solved
-      },
-      'expired-callback': () => {
-        // Response expired.
-      }
-    });
-
-    return () => {
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {}
-        window.recaptchaVerifier = null;
-      }
-    };
-  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -63,35 +45,23 @@ function Register() {
       return;
     }
 
-    const phoneNumber = "+91" + formData.mobileNumber;
-    const appVerifier = window.recaptchaVerifier;
-
     try {
-      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      setConfirmationResult(confirmation);
+      await sendOtp({ mobileNumber: formData.mobileNumber });
       setOtpSent(true);
-      alert("OTP Sent via Firebase!");
+      alert("OTP Sent!");
     } catch (error) {
       console.error(error);
-      alert("Firebase Error: " + error.message);
-      if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.render().then(function(widgetId) {
-          window.grecaptcha.reset(widgetId);
-        });
-      }
+      alert("Error sending OTP");
     }
   };
 
   const verifyOtpAndRegister = async (e) => {
     e.preventDefault();
-    if (!confirmationResult) return;
 
     try {
-      // 1. Verify OTP with Firebase
-      await confirmationResult.confirm(otp);
-
-      // 2. Register User with our backend
-      const response = await registerUser(formData);
+      // Register User with our backend (the backend should theoretically verify the OTP)
+      const dataToSubmit = { ...formData, otp };
+      const response = await registerUser(dataToSubmit);
 
       alert(response.data || "Registration Successful");
       navigate("/login");
@@ -115,19 +85,19 @@ function Register() {
           <div className="col-md-5">
             <div className="card shadow-lg border-0">
               <div className="card-header text-center text-white" style={{ backgroundColor: '#D8125B' }}>
-                <h3>Register</h3>
+                <h3>{t("register.title")}</h3>
               </div>
               <div className="card-body">
                 <form>
                   <div className="mb-3">
-                    <label className="form-label">Mobile Number</label>
+                    <label className="form-label">{t("register.mobileNumber")}</label>
                     <div className="input-group">
                       <span className="input-group-text">+91</span>
                       <input
                         type="text"
                         className="form-control"
                         name="mobileNumber"
-                        placeholder="Enter 10-digit Mobile Number"
+                        placeholder={t("register.enterMobile")}
                         value={formData.mobileNumber}
                         onChange={handleChange}
                         disabled={otpSent}
@@ -137,7 +107,7 @@ function Register() {
                   </div>
 
                   <div className="mb-4">
-                    <label className="form-label">Select Role</label>
+                    <label className="form-label">{t("register.selectRole")}</label>
                     <select
                       className="form-select"
                       name="role"
@@ -145,13 +115,12 @@ function Register() {
                       onChange={handleChange}
                       disabled={otpSent}
                     >
-                      <option value="WORKER">Worker</option>
-                      <option value="CONTRACTOR">Contractor</option>
-                      <option value="ADMIN">Admin</option>
+                      <option value="WORKER">{t("register.worker")}</option>
+                      <option value="CONTRACTOR">{t("register.contractor")}</option>
+                      <option value="ADMIN">{t("register.admin")}</option>
                     </select>
                   </div>
 
-                  <div id="recaptcha-container"></div>
 
                   {!otpSent ? (
                     <button
@@ -159,16 +128,16 @@ function Register() {
                       style={{ backgroundColor: '#D8125B' }}
                       onClick={sendOtpHandler}
                     >
-                      Send OTP via SMS
+                      {t("register.sendOtp")}
                     </button>
                   ) : (
                     <>
                       <div className="mb-3">
-                        <label className="form-label">Firebase OTP</label>
+                        <label className="form-label">{t("register.firebaseOtp")}</label>
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Enter the 6-digit OTP from SMS"
+                          placeholder={t("register.enterOtp")}
                           value={otp}
                           onChange={(e) => setOtp(e.target.value)}
                           required
@@ -179,16 +148,16 @@ function Register() {
                         style={{ backgroundColor: '#D8125B' }}
                         onClick={verifyOtpAndRegister}
                       >
-                        Verify & Register
+                        {t("register.verifyRegister")}
                       </button>
                     </>
                   )}
                 </form>
 
                 <div className="mt-4 text-center">
-                  <span className="text-muted">Already have an account? </span>
+                  <span className="text-muted">{t("register.hasAccount")}</span>
                   <Link to="/login" style={{ color: '#D8125B', fontWeight: 'bold', textDecoration: 'none' }}>
-                    Login
+                    {t("register.login")}
                   </Link>
                 </div>
               </div>
