@@ -4,15 +4,17 @@ import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { registerUser } from "../services/authService";
+import { useTranslation } from "react-i18next";
 
 function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     mobileNumber: "",
     role: "WORKER",
   });
-  
+
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState(null);
@@ -42,7 +44,7 @@ function Register() {
       if (window.recaptchaVerifier) {
         try {
           window.recaptchaVerifier.clear();
-        } catch (e) {}
+        } catch (e) { }
         window.recaptchaVerifier = null;
       }
     };
@@ -75,7 +77,7 @@ function Register() {
       console.error(error);
       alert("Firebase Error: " + error.message);
       if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.render().then(function(widgetId) {
+        window.recaptchaVerifier.render().then(function (widgetId) {
           window.grecaptcha.reset(widgetId);
         });
       }
@@ -115,19 +117,19 @@ function Register() {
           <div className="col-md-5">
             <div className="card shadow-lg border-0">
               <div className="card-header text-center text-white" style={{ backgroundColor: '#D8125B' }}>
-                <h3>Register</h3>
+                <h3>{t("register.title")}</h3>
               </div>
               <div className="card-body">
                 <form>
                   <div className="mb-3">
-                    <label className="form-label">Mobile Number</label>
+                    <label className="form-label">{t("register.mobileNumber")}</label>
                     <div className="input-group">
                       <span className="input-group-text">+91</span>
                       <input
                         type="text"
                         className="form-control"
                         name="mobileNumber"
-                        placeholder="Enter 10-digit Mobile Number"
+                        placeholder={t("register.enterMobile")}
                         value={formData.mobileNumber}
                         onChange={handleChange}
                         disabled={otpSent}
@@ -137,7 +139,7 @@ function Register() {
                   </div>
 
                   <div className="mb-4">
-                    <label className="form-label">Select Role</label>
+                    <label className="form-label">{t("register.selectRole")}</label>
                     <select
                       className="form-select"
                       name="role"
@@ -145,9 +147,9 @@ function Register() {
                       onChange={handleChange}
                       disabled={otpSent}
                     >
-                      <option value="WORKER">Worker</option>
-                      <option value="CONTRACTOR">Contractor</option>
-                      <option value="ADMIN">Admin</option>
+                      <option value="WORKER">{t("register.worker")}</option>
+                      <option value="CONTRACTOR">{t("register.contractor")}</option>
+                      <option value="ADMIN">{t("register.admin")}</option>
                     </select>
                   </div>
 
@@ -159,16 +161,16 @@ function Register() {
                       style={{ backgroundColor: '#D8125B' }}
                       onClick={sendOtpHandler}
                     >
-                      Send OTP via SMS
+                      {t("register.sendOtp")}
                     </button>
                   ) : (
                     <>
                       <div className="mb-3">
-                        <label className="form-label">Firebase OTP</label>
+                        <label className="form-label">{t("register.firebaseOtp")}</label>
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Enter the 6-digit OTP from SMS"
+                          placeholder={t("register.enterOtp")}
                           value={otp}
                           onChange={(e) => setOtp(e.target.value)}
                           required
@@ -179,16 +181,16 @@ function Register() {
                         style={{ backgroundColor: '#D8125B' }}
                         onClick={verifyOtpAndRegister}
                       >
-                        Verify & Register
+                        {t("register.verifyRegister")}
                       </button>
                     </>
                   )}
                 </form>
 
                 <div className="mt-4 text-center">
-                  <span className="text-muted">Already have an account? </span>
+                  <span className="text-muted">{t("register.hasAccount")}</span>
                   <Link to="/login" style={{ color: '#D8125B', fontWeight: 'bold', textDecoration: 'none' }}>
-                    Login
+                    {t("register.login")}
                   </Link>
                 </div>
               </div>

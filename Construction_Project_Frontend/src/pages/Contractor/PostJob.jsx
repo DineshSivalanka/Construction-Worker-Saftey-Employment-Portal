@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { createJob } from "../../services/contractorService";
+import { useTranslation } from "react-i18next";
 
 function PostJob() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const contractorId = localStorage.getItem("userId");
 
@@ -34,11 +36,11 @@ function PostJob() {
 
     try {
       await createJob(contractorId, payload);
-      alert("Job posted successfully!");
+      alert(t("contractorPostJob.success"));
       navigate("/contractor/my-jobs");
     } catch (error) {
       console.error(error);
-      alert("Failed to post job. Please try again.");
+      alert(t("contractorPostJob.error"));
     }
   };
 
@@ -56,19 +58,19 @@ function PostJob() {
                   background: "linear-gradient(135deg, #ff9800, #ff5722)",
                 }}
               >
-                <h3 className="mb-0 text-center fw-bold">➕ Post New Job</h3>
+                <h3 className="mb-0 text-center fw-bold">{t("contractorPostJob.title")}</h3>
               </div>
 
               <div className="card-body p-4">
                 <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label className="form-label fw-bold">Job Title</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.jobTitle")}</label>
                       <input
                         type="text"
                         className="form-control"
                         name="jobTitle"
-                        placeholder="e.g. Mason, Plumber, Electrician"
+                        placeholder={t("contractorPostJob.jobTitlePlaceholder")}
                         value={job.jobTitle}
                         onChange={handleChange}
                         required
@@ -76,12 +78,12 @@ function PostJob() {
                     </div>
 
                     <div className="col-md-6 mb-3">
-                      <label className="form-label fw-bold">Location</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.location")}</label>
                       <input
                         type="text"
                         className="form-control"
                         name="location"
-                        placeholder="City or Site Address"
+                        placeholder={t("contractorPostJob.locationPlaceholder")}
                         value={job.location}
                         onChange={handleChange}
                         required
@@ -91,7 +93,7 @@ function PostJob() {
 
                   <div className="row">
                     <div className="col-md-4 mb-3">
-                      <label className="form-label fw-bold">Working Hours</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.workingHours")}</label>
                       <input
                         type="text"
                         className="form-control"
@@ -103,12 +105,12 @@ function PostJob() {
                     </div>
 
                     <div className="col-md-4 mb-3">
-                      <label className="form-label fw-bold">Salary (₹)</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.salary")}</label>
                       <input
                         type="number"
                         className="form-control"
                         name="salary"
-                        placeholder="Per Day"
+                        placeholder={t("contractorPostJob.salaryPlaceholder")}
                         value={job.salary}
                         onChange={handleChange}
                         required
@@ -117,7 +119,7 @@ function PostJob() {
                     </div>
 
                     <div className="col-md-4 mb-3">
-                      <label className="form-label fw-bold">Workers Required</label>
+                      <label className="form-label fw-bold">{t("contractorPostJob.workersRequired")}</label>
                       <input
                         type="number"
                         className="form-control"
@@ -131,7 +133,7 @@ function PostJob() {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label fw-bold">Minimum Experience Required (Years)</label>
+                    <label className="form-label fw-bold">{t("contractorPostJob.experienceRequired")}</label>
                     <input
                       type="number"
                       className="form-control"
@@ -144,12 +146,12 @@ function PostJob() {
                   </div>
 
                   <div className="mb-4">
-                    <label className="form-label fw-bold">Job Description</label>
+                    <label className="form-label fw-bold">{t("contractorPostJob.description")}</label>
                     <textarea
                       className="form-control"
                       name="description"
                       rows="4"
-                      placeholder="Describe the job role and requirements..."
+                      placeholder={t("contractorPostJob.descriptionPlaceholder")}
                       value={job.description}
                       onChange={handleChange}
                       required
@@ -160,7 +162,7 @@ function PostJob() {
                     type="submit"
                     className="btn btn-warning w-100 fw-bold fs-5 shadow"
                   >
-                    🚀 Post Job
+                    {t("contractorPostJob.postJobButton")}
                   </button>
                 </form>
               </div>

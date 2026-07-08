@@ -4,8 +4,10 @@ import {
   getWorkerProfile,
   updateWorkerProfile,
 } from "../../services/workerService";
+import { useTranslation } from "react-i18next";
 
 function Profile() {
+  const { t } = useTranslation();
 
   // Dynamically load user ID from storage
   const workerId = localStorage.getItem("userId");
@@ -62,14 +64,14 @@ function Profile() {
     try {
       const response = await updateWorkerProfile(workerId, payload);
       console.log(response.data);
-      alert("Profile Updated Successfully");
+      alert(t("workerProfile.updateSuccess"));
     } catch (error) {
       console.log(error.response);
       console.log(error.response?.data);
       if (error.response?.data?.errors) {
-        alert("Validation Error: " + JSON.stringify(error.response.data.errors));
+        alert(t("workerProfile.validationError") + JSON.stringify(error.response.data.errors));
       } else {
-        alert("Update Failed: " + JSON.stringify(error.response?.data || error.message));
+        alert(t("workerProfile.updateFailed") + JSON.stringify(error.response?.data || error.message));
       }
     }
   };
@@ -83,9 +85,7 @@ function Profile() {
         <div className="card shadow">
 
           <div className="card-header bg-warning">
-
-            <h3>Worker Profile</h3>
-
+            <h3>{t("workerProfile.title")}</h3>
           </div>
 
           <div className="card-body">
@@ -95,8 +95,7 @@ function Profile() {
               <div className="row">
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Name</label>
+                  <label>{t("workerProfile.name")}</label>
 
                   <input
                     className="form-control"
@@ -108,8 +107,7 @@ function Profile() {
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Age</label>
+                  <label>{t("workerProfile.age")}</label>
 
                   <input
                     type="number"
@@ -122,49 +120,38 @@ function Profile() {
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Gender</label>
-
+                  <label>{t("workerProfile.gender")}</label>
                   <select
                     className="form-select"
                     name="gender"
                     value={worker.gender}
                     onChange={handleChange}
                   >
-
-                    <option>Male</option>
-                    <option>Female</option>
-
+                    <option value="Male">{t("workerProfile.male")}</option>
+                    <option value="Female">{t("workerProfile.female")}</option>
                   </select>
-
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Skill</label>
-
+                  <label>{t("workerProfile.skill")}</label>
                   <select
                     className="form-select"
                     name="skill"
                     value={worker.skill}
                     onChange={handleChange}
                   >
-
-                    <option>Mason</option>
-                    <option>Carpenter</option>
-                    <option>Electrician</option>
-                    <option>Painter</option>
-                    <option>Plumber</option>
-                    <option>Steel Fixer</option>
-                    <option>Tiles Worker</option>
-
+                    <option value="Mason">{t("workerProfile.mason")}</option>
+                    <option value="Carpenter">{t("workerProfile.carpenter")}</option>
+                    <option value="Electrician">{t("workerProfile.electrician")}</option>
+                    <option value="Painter">{t("workerProfile.painter")}</option>
+                    <option value="Plumber">{t("workerProfile.plumber")}</option>
+                    <option value="Steel Fixer">{t("workerProfile.steelFixer")}</option>
+                    <option value="Tiles Worker">{t("workerProfile.tilesWorker")}</option>
                   </select>
-
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Experience (Years)</label>
+                  <label>{t("workerProfile.experience")}</label>
 
                   <input
                     type="number"
@@ -177,8 +164,7 @@ function Profile() {
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Current Location</label>
+                  <label>{t("workerProfile.currentLocation")}</label>
 
                   <input
                     className="form-control"
@@ -190,8 +176,7 @@ function Profile() {
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>Village</label>
+                  <label>{t("workerProfile.village")}</label>
 
                   <input
                     className="form-control"
@@ -203,8 +188,7 @@ function Profile() {
                 </div>
 
                 <div className="col-md-6 mb-3">
-
-                  <label>District</label>
+                  <label>{t("workerProfile.district")}</label>
 
                   <input
                     className="form-control"
@@ -216,8 +200,7 @@ function Profile() {
                 </div>
 
                 <div className="col-12 mb-3">
-
-                  <label>Address</label>
+                  <label>{t("workerProfile.address")}</label>
 
                   <textarea
                     rows="3"
@@ -232,7 +215,7 @@ function Profile() {
               </div>
 
               <button className="btn btn-warning w-100">
-                Save Profile
+                {t("workerProfile.saveProfile")}
               </button>
 
             </form>

@@ -4,8 +4,10 @@ import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { verifyOtp } from "../services/authService"; // We will still use this to establish session with our Spring Boot backend
+import { useTranslation } from "react-i18next";
 
 function Login() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const [mobileNumber, setMobileNumber] = useState("");
@@ -39,7 +41,7 @@ function Login() {
             if (window.recaptchaVerifier) {
                 try {
                     window.recaptchaVerifier.clear();
-                } catch (e) {}
+                } catch (e) { }
                 window.recaptchaVerifier = null;
             }
         };
@@ -64,7 +66,7 @@ function Login() {
             alert("Firebase Error: " + error.message + "\n\nPlease ensure Phone Auth is enabled and 'localhost' is added to Authorized Domains in Firebase.");
             // Reset reCAPTCHA if it failed
             if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.render().then(function(widgetId) {
+                window.recaptchaVerifier.render().then(function (widgetId) {
                     window.grecaptcha.reset(widgetId);
                 });
             }
@@ -78,7 +80,7 @@ function Login() {
             // 1. Verify OTP with Firebase
             const result = await confirmationResult.confirm(otp);
             const user = result.user;
-            
+
             // Optional: get Firebase ID Token if you want to verify on backend securely
             // const idToken = await user.getIdToken();
 
@@ -122,17 +124,17 @@ function Login() {
                     <div className="col-md-5">
                         <div className="card shadow-lg">
                             <div className="card-header text-center text-white" style={{ backgroundColor: '#D8125B' }}>
-                                <h3>Login</h3>
+                                <h3>{t("login.title")}</h3>
                             </div>
                             <div className="card-body">
                                 <div className="mb-3">
-                                    <label>Mobile Number (10 digits)</label>
+                                    <label>{t("login.mobileNumber")}</label>
                                     <div className="input-group">
                                         <span className="input-group-text">+91</span>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            placeholder="Enter Mobile Number"
+                                            placeholder={t("login.enterMobile")}
                                             value={mobileNumber}
                                             onChange={(e) => setMobileNumber(e.target.value)}
                                         />
@@ -143,30 +145,30 @@ function Login() {
 
                                 {!otpSent ? (
                                     <button className="btn w-100 text-white fw-bold" style={{ backgroundColor: '#D8125B' }} onClick={sendOtpHandler}>
-                                        Send OTP via SMS
+                                        {t("login.sendOtp")}
                                     </button>
                                 ) : (
                                     <>
                                         <div className="mt-4 mb-3">
-                                            <label>Firebase OTP</label>
+                                            <label>{t("login.firebaseOtp")}</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="Enter the 6-digit OTP from SMS"
+                                                placeholder={t("login.enterOtp")}
                                                 value={otp}
                                                 onChange={(e) => setOtp(e.target.value)}
                                             />
                                         </div>
                                         <button className="btn w-100 text-white fw-bold" style={{ backgroundColor: '#D8125B' }} onClick={verifyOtpHandler}>
-                                            Verify & Login
+                                            {t("login.verifyLogin")}
                                         </button>
                                     </>
                                 )}
 
                                 <div className="mt-4 text-center">
-                                    <span className="text-muted">Don't have an account? </span>
+                                    <span className="text-muted">{t("login.noAccount")}</span>
                                     <Link to="/register" style={{ color: '#D8125B', fontWeight: 'bold', textDecoration: 'none' }}>
-                                        Create an account
+                                        {t("login.createAccount")}
                                     </Link>
                                 </div>
                             </div>
