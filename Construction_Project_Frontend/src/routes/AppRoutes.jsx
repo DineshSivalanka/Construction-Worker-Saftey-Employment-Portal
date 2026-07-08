@@ -4,21 +4,21 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 
-import WorkerDashboard from '../pages/worker/Dashboard';
-import ContractorDashboard from '../pages/contractor/Dashboard';
-import AdminDashboard from '../pages/admin/Dashboard';
-import AdminWorkers from '../pages/admin/Workers';
-import AdminContractors from '../pages/admin/Contractors';
-import AdminJobs from '../pages/admin/Jobs';
+import WorkerDashboard from '../pages/Worker/Dashboard';
+import ContractorDashboard from '../pages/Contractor/Dashboard';
+import AdminDashboard from '../pages/Admin/Dashboard';
+import AdminWorkers from '../pages/Admin/Workers';
+import AdminContractors from '../pages/Admin/Contractors';
+import AdminJobs from '../pages/Admin/Jobs';
 
-import Profile from '../pages/worker/Profile';
-import Jobs from '../pages/worker/Jobs';
-import MyApplications from '../pages/worker/MyApplications';
+import Profile from '../pages/Worker/Profile';
+import Jobs from '../pages/Worker/Jobs';
+import MyApplications from '../pages/Worker/MyApplications';
 
-import PostJob from '../pages/contractor/PostJob';
-import MyJobs from '../pages/contractor/MyJobs';
-import EditJob from '../pages/contractor/EditJob';
-import Applicants from '../pages/contractor/Applicants';
+import PostJob from '../pages/Contractor/PostJob';
+import MyJobs from '../pages/Contractor/MyJobs';
+import EditJob from '../pages/Contractor/EditJob';
+import Applicants from '../pages/Contractor/Applicants';
 
 import ProtectedRoute from '../components/ProtectedRoute';
 
