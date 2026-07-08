@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -121,8 +121,8 @@ function Login() {
                 <div className="row justify-content-center">
                     <div className="col-md-5">
                         <div className="card shadow-lg">
-                            <div className="card-header bg-warning text-center">
-                                <h3>Login (Firebase Auth)</h3>
+                            <div className="card-header text-center text-white" style={{ backgroundColor: '#D8125B' }}>
+                                <h3>Login</h3>
                             </div>
                             <div className="card-body">
                                 <div className="mb-3">
@@ -142,7 +142,7 @@ function Login() {
                                 <div id="recaptcha-container"></div>
 
                                 {!otpSent ? (
-                                    <button className="btn btn-warning w-100" onClick={sendOtpHandler}>
+                                    <button className="btn w-100 text-white fw-bold" style={{ backgroundColor: '#D8125B' }} onClick={sendOtpHandler}>
                                         Send OTP via SMS
                                     </button>
                                 ) : (
@@ -157,11 +157,18 @@ function Login() {
                                                 onChange={(e) => setOtp(e.target.value)}
                                             />
                                         </div>
-                                        <button className="btn btn-success w-100" onClick={verifyOtpHandler}>
+                                        <button className="btn w-100 text-white fw-bold" style={{ backgroundColor: '#D8125B' }} onClick={verifyOtpHandler}>
                                             Verify & Login
                                         </button>
                                     </>
                                 )}
+
+                                <div className="mt-4 text-center">
+                                    <span className="text-muted">Don't have an account? </span>
+                                    <Link to="/register" style={{ color: '#D8125B', fontWeight: 'bold', textDecoration: 'none' }}>
+                                        Create an account
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>

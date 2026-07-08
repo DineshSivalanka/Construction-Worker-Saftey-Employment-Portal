@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -114,7 +114,7 @@ function Register() {
         <div className="row justify-content-center mt-5">
           <div className="col-md-5">
             <div className="card shadow-lg border-0">
-              <div className="card-header bg-warning text-dark text-center">
+              <div className="card-header text-center text-white" style={{ backgroundColor: '#D8125B' }}>
                 <h3>Register</h3>
               </div>
               <div className="card-body">
@@ -155,7 +155,8 @@ function Register() {
 
                   {!otpSent ? (
                     <button
-                      className="btn btn-warning w-100 fw-bold"
+                      className="btn w-100 text-white fw-bold"
+                      style={{ backgroundColor: '#D8125B' }}
                       onClick={sendOtpHandler}
                     >
                       Send OTP via SMS
@@ -174,7 +175,8 @@ function Register() {
                         />
                       </div>
                       <button
-                        className="btn btn-success w-100 fw-bold"
+                        className="btn w-100 text-white fw-bold"
+                        style={{ backgroundColor: '#D8125B' }}
                         onClick={verifyOtpAndRegister}
                       >
                         Verify & Register
@@ -182,6 +184,13 @@ function Register() {
                     </>
                   )}
                 </form>
+
+                <div className="mt-4 text-center">
+                  <span className="text-muted">Already have an account? </span>
+                  <Link to="/login" style={{ color: '#D8125B', fontWeight: 'bold', textDecoration: 'none' }}>
+                    Login
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

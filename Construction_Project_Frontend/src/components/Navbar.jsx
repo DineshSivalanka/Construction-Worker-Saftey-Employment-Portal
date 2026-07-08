@@ -56,6 +56,7 @@ function Navbar() {
                 <NavLink to="/">Home</NavLink>
                 <NavLink to="/login">Login</NavLink>
                 <Link 
+                  to="/register"
                   style={{ textDecoration: 'none' }}
                   className="ml-4 px-6 py-2.5 bg-[#D8125B] text-white font-bold rounded-lg shadow-sm hover:bg-[#D8125B]/80 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 no-underline"
                 >
