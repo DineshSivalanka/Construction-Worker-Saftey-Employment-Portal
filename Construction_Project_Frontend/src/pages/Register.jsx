@@ -46,9 +46,9 @@ function Register() {
     }
 
     try {
-      await sendOtp({ mobileNumber: formData.mobileNumber });
+      const response = await sendOtp({ mobileNumber: formData.mobileNumber });
       setOtpSent(true);
-      alert("OTP Sent!");
+      alert(response.data);
     } catch (error) {
       console.error(error);
       alert("Error sending OTP");

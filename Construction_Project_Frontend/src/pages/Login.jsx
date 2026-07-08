@@ -33,9 +33,9 @@ function Login() {
         }
 
         try {
-            await sendOtp({ mobileNumber });
+            const response = await sendOtp({ mobileNumber });
             setOtpSent(true);
-            alert("OTP Sent!");
+            alert(response.data);
         } catch (error) {
             console.error(error);
             alert("Error sending OTP");

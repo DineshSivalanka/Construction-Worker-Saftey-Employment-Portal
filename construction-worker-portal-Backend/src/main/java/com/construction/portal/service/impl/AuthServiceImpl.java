@@ -92,10 +92,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String sendOtp(LoginRequest request) {
 
-        if (!userRepository.existsByMobileNumber(request.getMobileNumber())) {
-            return "User not found";
-        }
-
         // Dummy OTP for project
         String otp = "123456";
 
