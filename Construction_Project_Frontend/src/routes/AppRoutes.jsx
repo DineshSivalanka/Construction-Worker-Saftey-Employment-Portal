@@ -1,3 +1,4 @@
+// Force route HMR reload
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
@@ -14,11 +15,14 @@ import AdminJobs from '../pages/Admin/Jobs';
 import Profile from '../pages/Worker/Profile';
 import Jobs from '../pages/Worker/Jobs';
 import MyApplications from '../pages/Worker/MyApplications';
+import WorkDetails from '../pages/Worker/WorkDetails';
 
 import PostJob from '../pages/Contractor/PostJob';
 import MyJobs from '../pages/Contractor/MyJobs';
 import EditJob from '../pages/Contractor/EditJob';
 import Applicants from '../pages/Contractor/Applicants';
+import ContractorProfile from '../pages/Contractor/ContractorProfile';
+import ContractExperience from '../pages/Contractor/ContractExperience';
 
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -34,13 +38,17 @@ function AppRoutes() {
       <Route path="/worker/profile" element={<ProtectedRoute allowedRoles={["WORKER"]}><Profile /></ProtectedRoute>} />
       <Route path="/worker/jobs" element={<ProtectedRoute allowedRoles={["WORKER"]}><Jobs /></ProtectedRoute>} />
       <Route path="/worker/my-applications" element={<ProtectedRoute allowedRoles={["WORKER"]}><MyApplications /></ProtectedRoute>} />
+      <Route path="/worker/work-details" element={<ProtectedRoute allowedRoles={["WORKER"]}><WorkDetails /></ProtectedRoute>} />
 
       {/* Contractor Routes */}
       <Route path="/contractor/dashboard" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><ContractorDashboard /></ProtectedRoute>} />
       <Route path="/contractor/post-job" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><PostJob /></ProtectedRoute>} />
       <Route path="/contractor/my-jobs" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><MyJobs /></ProtectedRoute>} />
       <Route path="/contractor/edit-job/:jobId" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><EditJob /></ProtectedRoute>} />
+      <Route path="/contractor/applicants" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><Applicants /></ProtectedRoute>} />
       <Route path="/contractor/applicants/:jobId" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><Applicants /></ProtectedRoute>} />
+      <Route path="/contractor/contract-experience" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><ContractExperience /></ProtectedRoute>} />
+      <Route path="/contractor/profile" element={<ProtectedRoute allowedRoles={["CONTRACTOR"]}><ContractorProfile /></ProtectedRoute>} />
 
       {/* Admin Routes */}
       <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminDashboard /></ProtectedRoute>} />

@@ -160,14 +160,16 @@ function MyJobs() {
                         className="btn btn-sm d-flex align-items-center gap-1.5 rounded-xl px-3 py-2 font-semibold text-xs transition-all hover:bg-[#d97706] hover:text-white bg-white"
                         style={{ border: '1px solid #d97706', color: '#d97706', height: '38px' }}
                       >
-                        {t("contractorMyJobs.edit", "Edit")}
+                        <FaEdit size={12} className="shrink-0" />
+                        <span>{t("contractorMyJobs.edit", "Edit")}</span>
                       </Link>
                       <Link 
                         to={`/contractor/applicants/${job.jobId}`} 
                         className="btn btn-sm text-[#212529] d-flex align-items-center gap-1.5 rounded-xl px-3.5 py-2 font-bold text-xs transition-all shadow-sm flex-grow-1 justify-content-center border-0 hover:bg-[#e0a800]"
                         style={{ backgroundColor: '#ffc107', height: '38px' }}
                       >
-                        {t("contractorMyJobs.viewApplicants", "View Applicants")}
+                        <FaUsers size={13} className="shrink-0" />
+                        <span>{t("contractorMyJobs.viewApplicants", "View Applicants")}</span>
                       </Link>
                       <button 
                         className="btn btn-sm d-flex align-items-center justify-content-center rounded-xl border-0 transition-all hover:bg-red-100"

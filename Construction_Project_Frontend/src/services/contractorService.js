@@ -34,3 +34,13 @@ export const acceptApplicant = async (applicationId) => {
 export const rejectApplicant = async (applicationId) => {
     return await api.put(`/contractors/applications/${applicationId}?status=REJECTED`);
 };
+
+// Get Contractor Profile
+export const getContractorProfile = async (id) => {
+    return await api.get(`/contractors/${id}`);
+};
+
+// Update Contractor Profile
+export const updateContractorProfile = async (id, data) => {
+    return await api.put(`/contractors/${id}`, data);
+};

@@ -5,8 +5,9 @@ import {
   getApplicants,
   acceptApplicant,
   rejectApplicant,
+  getMyJobs,
 } from "../../services/contractorService";
-import { FaMapMarkerAlt, FaBriefcase, FaUsers, FaCheck, FaTimes, FaArrowLeft } from "react-icons/fa";
+import { FaMapMarkerAlt, FaBriefcase, FaUsers, FaCheck, FaTimes, FaArrowLeft, FaMoneyBillWave } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useDynamicTranslation } from "../../hooks/useDynamicTranslation";
 
@@ -21,8 +22,39 @@ const Applicants = () => {
 
   const loadApplicants = async () => {
     try {
-      const response = await getApplicants(jobId);
-      setApplicants(response.data);
+      if (jobId && jobId !== "all") {
+        const response = await getApplicants(jobId);
+        setApplicants(response.data);
+      } else {
+        const contractorId = localStorage.getItem("userId");
+        if (!contractorId) {
+          console.error("Contractor ID not found in localStorage");
+          return;
+        }
+        // Fetch all jobs for this contractor
+        const jobsResponse = await getMyJobs(contractorId);
+        const jobsList = jobsResponse.data || [];
+        
+        // Fetch applicants for all jobs
+        const applicantsPromises = jobsList.map((job) =>
+          getApplicants(job.jobId)
+            .then((res) => {
+              // Attach the job details explicitly to each application just in case
+              return (res.data || []).map((app) => ({
+                ...app,
+                job: app.job || job,
+              }));
+            })
+            .catch((err) => {
+              console.error(`Error fetching applicants for job ${job.jobId}:`, err);
+              return [];
+            })
+        );
+        
+        const results = await Promise.all(applicantsPromises);
+        const allApplicants = results.flat();
+        setApplicants(allApplicants);
+      }
     } catch (error) {
       console.error(error);
       alert(t("contractorApplicants.failedToLoad"));
@@ -39,26 +71,66 @@ const Applicants = () => {
 
   const translateAllApplicants = async () => {
     if (currentLang === 'en') {
-      setTranslatedApplicants(applicants);
+      const englishApps = applicants.map((app) => {
+        const workerName = app.worker && app.worker.workerName && app.worker.workerName.trim() 
+          ? app.worker.workerName 
+          : t("contractorApplicants.unknownWorker", "Unknown Worker");
+        const workerSkill = app.worker && app.worker.skill && app.worker.skill.trim() 
+          ? app.worker.skill 
+          : t("contractorApplicants.na", "N/A");
+        const workerLocation = app.worker && (app.worker.currentLocation || app.worker.address) && (app.worker.currentLocation || app.worker.address).trim()
+          ? (app.worker.currentLocation || app.worker.address)
+          : t("contractorApplicants.na", "N/A");
+        const mobileNumber = app.worker && app.worker.user && app.worker.user.mobileNumber 
+          ? app.worker.user.mobileNumber 
+          : "N/A";
+        const jobTitle = app.job && app.job.jobTitle ? app.job.jobTitle : "";
+        const jobLocation = app.job && app.job.location ? app.job.location : "";
+        
+        return {
+          ...app,
+          translatedName: workerName,
+          translatedSkill: workerSkill,
+          translatedLocation: workerLocation,
+          mobileNumber: mobileNumber,
+          translatedJobTitle: jobTitle,
+          translatedJobLocation: jobLocation
+        };
+      });
+      setTranslatedApplicants(englishApps);
       return;
     }
 
     const newApps = await Promise.all(applicants.map(async (app) => {
-      const workerName = app.worker ? app.worker.workerName : "Unknown Worker";
-      const workerSkill = app.worker ? app.worker.skill : "N/A";
-      const workerLocation = app.worker ? (app.worker.currentLocation || app.worker.address) : "N/A";
+      const workerName = app.worker && app.worker.workerName && app.worker.workerName.trim() 
+        ? app.worker.workerName 
+        : "Unknown Worker";
+      const workerSkill = app.worker && app.worker.skill && app.worker.skill.trim() 
+        ? app.worker.skill 
+        : "N/A";
+      const workerLocation = app.worker && (app.worker.currentLocation || app.worker.address) && (app.worker.currentLocation || app.worker.address).trim()
+        ? (app.worker.currentLocation || app.worker.address)
+        : "N/A";
+      const mobileNumber = app.worker && app.worker.user && app.worker.user.mobileNumber 
+        ? app.worker.user.mobileNumber 
+        : "N/A";
       
       const translatedName = await translate(workerName);
       const translatedSkill = await translate(workerSkill);
       const translatedLocation = await translate(workerLocation);
       const translatedStatus = await translate(app.status);
+      const translatedJobTitle = app.job && app.job.jobTitle ? await translate(app.job.jobTitle) : "";
+      const translatedJobLocation = app.job && app.job.location ? await translate(app.job.location) : "";
       
       return {
         ...app,
         translatedName,
         translatedSkill,
         translatedLocation,
-        translatedStatus
+        translatedStatus,
+        mobileNumber,
+        translatedJobTitle,
+        translatedJobLocation
       };
     }));
     setTranslatedApplicants(newApps);
@@ -96,18 +168,23 @@ const Applicants = () => {
 
       <div className="container mt-5 mb-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="text-[#D8125B] fw-bold">👥 Job Applicants</h2>
+          <h2 className="text-[#D8125B] fw-bold">
+            {jobId && jobId !== "all"
+              ? t("contractorApplicants.title", "👥 Job Applicants")
+              : t("contractorApplicants.allTitle", "👥 All Job Applicants")}
+          </h2>
           <button
-            onClick={() => navigate("/contractor/my-jobs")}
+            onClick={() => navigate(jobId && jobId !== "all" ? "/contractor/my-jobs" : "/contractor/dashboard")}
             className="btn btn-sm d-flex align-items-center gap-1.5 rounded-xl px-4 py-2.5 font-semibold text-sm transition-all hover:bg-[#d97706] hover:text-white bg-white"
             style={{ border: '1px solid #d97706', color: '#d97706', height: '42px' }}
           >
-            <FaArrowLeft /> Back to My Jobs
+            <FaArrowLeft size={12} className="shrink-0" />
+            <span>
+              {jobId && jobId !== "all" 
+                ? t("contractorApplicants.backToMyJobs", "Back to My Jobs") 
+                : t("contractorApplicants.backToDashboard", "Back to Dashboard")}
+            </span>
           </button>
-          <h2 className="text-[#D8125B] fw-bold">{t("contractorApplicants.title")}</h2>
-          <Link to="/contractor/my-jobs" className="btn btn-secondary fw-bold">
-            {t("contractorApplicants.backToMyJobs")}
-          </Link>
         </div>
 
         {isTranslating ? (
@@ -119,7 +196,11 @@ const Applicants = () => {
           </div>
         ) : translatedApplicants.length === 0 ? (
           <div className="text-center mt-5">
-            <h4 className="text-muted">{t("contractorApplicants.noApplicants", "No applicants found for this job.")}</h4>
+            <h4 className="text-muted">
+              {jobId && jobId !== "all"
+                ? t("contractorApplicants.noApplicants", "No applicants found for this job.")
+                : t("contractorApplicants.noAllApplicants", "No applicants found for any of your jobs.")}
+            </h4>
           </div>
         ) : (
           <div className="row justify-content-start">
@@ -129,15 +210,15 @@ const Applicants = () => {
                   <div>
                     {/* Header: Name and Status */}
                     <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
-                      <div className="text-truncate" style={{ maxWidth: '72%' }}>
-                        <h4 className="fw-bold text-[#D8125B] mb-0 text-truncate" title={app.translatedName || (app.worker ? app.worker.workerName : "Unknown Worker")} style={{ fontSize: '1.2rem' }}>
-                          👷 {app.translatedName || (app.worker ? app.worker.workerName : "Unknown Worker")}
+                      <div className="flex-grow-1" style={{ minWidth: 0 }}>
+                        <h4 className="fw-bold text-[#D8125B] mb-0" title={app.translatedName} style={{ fontSize: '1.1rem' }}>
+                          👷 {app.translatedName}
                         </h4>
                         <small className="text-gray-500 fw-medium" style={{ fontSize: '0.85rem' }}>
-                          Mobile: {app.worker ? app.worker.mobileNumber || "N/A" : "N/A"}
+                          Mobile: {app.mobileNumber}
                         </small>
                       </div>
-                      <span className={`badge text-white px-3 py-1.5 rounded-pill shadow-sm ${
+                      <span className={`badge text-white px-3 py-1.5 rounded-pill shadow-sm shrink-0 ${
                         app.status === "ACCEPTED" 
                           ? "bg-[#198754]" 
                           : app.status === "REJECTED" 
@@ -148,30 +229,54 @@ const Applicants = () => {
                       </span>
                     </div>
 
-                    {/* Details 2x2 Grid */}
-                    <div className="row g-2 mb-3">
-                      <div className="col-6">
-                        <div className="d-flex align-items-center gap-2 p-2 bg-white rounded-2xl border border-gray-100 text-truncate" style={{ height: '38px' }}>
-                          <FaMapMarkerAlt className="text-gray-400 shrink-0" size={13} />
-                          <span className="small text-truncate text-gray-700 fw-semibold" style={{ fontSize: '0.8rem' }} title={app.translatedLocation || (app.worker ? app.worker.currentLocation || app.worker.address : "N/A")}>
-                            {app.translatedLocation || (app.worker ? app.worker.currentLocation || app.worker.address : "N/A")}
+                    {/* Job Details Section */}
+                    {app.job && (
+                      <div className="mb-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                        <div className="text-muted small fw-bold text-uppercase mb-1 tracking-wider" style={{ fontSize: '0.7rem' }}>
+                          💼 {t("contractorApplicants.appliedJob", "Applied Job")}
+                        </div>
+                        <h5 className="fw-bold text-[#D8125B] mb-1 text-truncate" title={app.translatedJobTitle || app.job.jobTitle} style={{ fontSize: '0.95rem' }}>
+                          {app.translatedJobTitle || app.job.jobTitle}
+                        </h5>
+                        <div className="d-flex flex-wrap gap-x-3 gap-y-1 text-gray-600 mt-1" style={{ fontSize: '0.75rem' }}>
+                          <span className="text-truncate" style={{ maxWidth: '120px' }} title={app.translatedJobLocation || app.job.location}>
+                            📍 {app.translatedJobLocation || app.job.location}
                           </span>
+                          <span>💰 ₹{app.job.salary}</span>
+                          <span>🕒 {app.job.workingHours || "Full Time"}</span>
                         </div>
                       </div>
-                      <div className="col-6">
-                        <div className="d-flex align-items-center gap-2 p-2 bg-white rounded-2xl border border-gray-100 text-truncate" style={{ height: '38px' }}>
-                          <FaBriefcase className="text-purple-500 shrink-0" size={13} />
-                          <span className="small text-truncate text-purple-800 fw-semibold" style={{ fontSize: '0.8rem' }} title={app.translatedSkill || (app.worker ? app.worker.skill : "N/A")}>
-                            {app.translatedSkill || (app.worker ? app.worker.skill : "N/A")}
-                          </span>
-                        </div>
+                    )}
+
+                    {/* Worker Details Section */}
+                    <div className="mb-1 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                      <div className="text-muted small fw-bold text-uppercase mb-1 tracking-wider" style={{ fontSize: '0.7rem' }}>
+                        👤 {t("contractorApplicants.applicantDetails", "Applicant Info")}
                       </div>
-                      <div className="col-12">
-                        <div className="d-flex align-items-center gap-2 p-2 bg-white rounded-2xl border border-gray-100 text-truncate" style={{ height: '38px' }}>
-                          <FaUsers className="text-blue-500 shrink-0" size={13} />
-                          <span className="small text-truncate text-blue-800 fw-semibold" style={{ fontSize: '0.8rem' }}>
-                            {app.worker ? app.worker.experienceYears : 0} {t("contractorApplicants.years", "Yrs Experience")}
-                          </span>
+                      <div className="row g-2">
+                        <div className="col-6">
+                          <div className="d-flex align-items-center gap-1.5 text-truncate" style={{ height: '24px' }}>
+                            <FaMapMarkerAlt className="text-gray-400 shrink-0" size={12} />
+                            <span className="small text-truncate text-gray-700 fw-semibold" style={{ fontSize: '0.75rem' }} title={app.translatedLocation}>
+                              {app.translatedLocation}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="d-flex align-items-center gap-1.5 text-truncate" style={{ height: '24px' }}>
+                            <FaBriefcase className="text-purple-500 shrink-0" size={12} />
+                            <span className="small text-truncate text-purple-800 fw-semibold" style={{ fontSize: '0.75rem' }} title={app.translatedSkill}>
+                              {app.translatedSkill}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="col-12 mt-1">
+                          <div className="d-flex align-items-center gap-1.5 text-truncate" style={{ height: '24px' }}>
+                            <FaUsers className="text-blue-500 shrink-0" size={12} />
+                            <span className="small text-truncate text-blue-800 fw-semibold" style={{ fontSize: '0.75rem' }}>
+                              {app.worker ? app.worker.experienceYears : 0} {t("contractorApplicants.years", "Yrs Experience")}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
